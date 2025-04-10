@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Мои Бронирования – Whitable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-white text-gray-800">
+
+<!-- Header -->
+<header class="bg-white shadow fixed top-0 w-full z-50">
+    <nav class="max-w-6xl mx-auto flex items-center justify-between p-4">
+        <div class="text-xl font-bold text-blue-600">Whitable</div>
+        <ul class="flex gap-6">
+            <li><a href="/" class="hover:text-blue-600">Главная</a></li>
+            <li><a href="/restaurants" class="hover:text-blue-600">Рестораны</a></li>
+            <li><a href="/bookings/my-bookings" class="text-blue-600 font-semibold">Мои Бронирования</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Main -->
+<main class="flex-grow pt-24 pb-10 px-4 w-full max-w-6xl mx-auto">
+    <h1 class="text-3xl font-semibold mb-8">Мои Бронирования</h1>
+
+    <div class="space-y-6">
+        <!-- Блок "Пустое состояние" -->
+        <div th:if="${bookings.isEmpty()}"
+             class="flex flex-col items-center justify-center gap-4 py-12 text-center border border-gray-200 rounded-lg bg-white">
+            <!-- Иконка (пример из Heroicons) -->
+            <svg class="h-16 w-16 text-gray-400 mx-auto" fill="none" stroke="currentColor" stroke-width="1.5"
+                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 8c1.956 0 3.304 1.93 3.404 3.026A5.875 5.875 0 0 1 18 16.72C18 18.69 16.135 20 14 20H10c-2.135 0-4-1.31-4-3.28a5.875 5.875 0 0 1 2.596-4.694C8.696 9.93 10.044 8 12 8ZM8 4v1.333M16 4v1.333M4 10h16M3.2 6.667h17.6c.442 0 .8.358.8.8V18.4c0 .442-.358.8-.8.8H3.2a.8.8 0 0 1-.8-.8V7.467c0-.442.358-.8.8-.8Z" />
+            </svg>
+
+            <h2 class="text-xl font-semibold text-gray-800">У вас пока нет бронирований</h2>
+            <p class="text-gray-600 max-w-md">
+                Похоже, вы ещё не забронировали ни одного стола. Самое время это исправить!
+            </p>
+            <a href="/restaurants"
+               class="inline-block mt-3 px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                Перейти к ресторанам
+            </a>
+        </div>
+
+        <!-- Выводим карточки бронирований, если они есть -->
+        <div th:each="booking : ${bookings}"
+             class="w-full border border-gray-200 rounded-lg p-6 bg-white shadow-md hover:shadow-lg transition">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <!-- Информация о бронировании -->
+                <div>
+                    <h2 class="text-2xl font-semibold text-blue-600 mb-1" th:text="${booking.restaurant.name}">
+                        Название ресторана
+                    </h2>
+                    <div class="text-gray-600 text-sm space-y-1">
+                        <p th:text="${#temporals.format(booking.startTime, 'dd MMMM yyyy, HH:mm')}">
+                            Дата и время
+                        </p>
+                        <p th:text="${booking.guestCount} + ' ' + (${booking.guestCount == 1} ? 'гость' : 'гостей')}">
+                            Гости
+                        </p>
+                        <p th:if="${booking.note != null}" th:text="'Примечание: ' + ${booking.note}">
+                            Примечание
+                        </p>
+                        <p th:text="'Статус: ' + ${booking.bookingStatus}">
+                            Статус
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="mt-4 md:mt-0 flex gap-3">
+                    <form th:action="@{/bookings/cancel}" method="post">
+                        <input type="hidden" name="bookingId" th:value="${booking.id}" />
+                        <button type="submit"
+                                class="px-4 py-2 text-sm font-medium text-red-600 border border-red-300
+                                       rounded-md hover:bg-red-50 transition">
+                            Отменить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Конец цикла th:each -->
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 px-4 text-sm text-gray-500">
+        <div class="font-semibold text-blue-600">Whitable</div>
+        <div class="flex flex-wrap gap-4">
+            <a href="/about" class="hover:text-blue-600">О нас</a>
+            <a href="/contact" class="hover:text-blue-600">Контакты</a>
+            <a href="/privacy" class="hover:text-blue-600">Политика конфиденциальности</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

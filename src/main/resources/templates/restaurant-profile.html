@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>La Piazza Italiana - Restaurant Profile | Whitable</title>
+    <link rel="stylesheet" href="/css/restaurant-profile.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<header class="header">
+    <nav class="nav-container">
+        <a href="/" class="logo">Whitable</a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/restaurants.html" class="active">Restaurants</a></li>
+            <li><a href="/login">Sign In</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="profile-container">
+    <div class="back-navigation">
+        <a href="/restaurants" class="back-link">
+            <i class="fas fa-arrow-left"></i> Вернуться к ресторанам
+        </a>
+    </div>
+
+    <section class="restaurant-hero">
+        <div class="hero-image">
+            <img th:src="${restaurant.getPhotoUrl()}" alt="La Piazza Italiana" id="restaurantImage">
+        </div>
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1 id="restaurantName" th:text="${restaurant.getName()}">La Piazza Italiana</h1>
+                <div class="restaurant-meta">
+                    <div class="inline-flex items-center space-x-1">
+                        <i class="fas fa-utensils"></i>
+                        <span class="cuisine-type" th:text="${restaurant.getCuisineType()}">Italian</span>
+                    </div>
+                    <div class="inline-flex items-center space-x-1">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span class="price-range" th:text="${restaurant.getAverageCheck()}">$$</span>
+                    </div>
+                    <span class="rating rating-5" id="restaurantRating">4.8</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-grid">
+        <section class="main-content">
+            <div class="description-card">
+                <h2>Описание</h2>
+                <p id="restaurantDescription" th:text="${restaurant.getDescription()}">Authentic Italian cuisine in a warm, rustic atmosphere. Our handmade pasta and wood-fired pizzas will transport you straight to Italy. Led by Chef Marco Rossi, our kitchen celebrates the rich culinary traditions of various Italian regions, from the seafood-rich coast to the hearty dishes of the countryside.</p>
+            </div>
+
+            <div class="hours-card">
+                <h2>Часы Работы</h2>
+                <ul class="hours-list">
+                    <th:block th:each="entry : ${restaurant.openingHours}">
+                        <li>
+                            <!-- Отображаем день и часы -->
+                            <span class="day" th:text="${entry.key}"></span>
+                            <span class="time" th:text="${entry.value}"></span>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+
+            <div class="amenities-section">
+                <h2>Удобства & Услуги</h2>
+                <div class="amenities-grid">
+                    <th:block th:if="${#lists.contains(amenities, 'Уличные Сиденья')}">
+                        <div class="amenity-card">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <h3>Уличные сиденья</h3>
+                            <p>Наслаждайтесь трапезой на свежем воздухе благодаря уютной зоне с уличными сиденьями.</p>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${#lists.contains(amenities, 'Парковка')}">
+                        <div class="amenity-card">
+                            <i class="fas fa-parking"></i>
+                            <h3>Parking</h3>
+                            <p>
+                                Удобная парковка прямо рядом с рестораном для вашего комфорта..
+                            </p>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${#lists.contains(amenities, 'Wi-Fi')}">
+                        <div class="amenity-card">
+                            <i class="fas fa-wifi"></i>
+                            <h3>Free WiFi</h3>
+                            <p>Оставайтесь на связи с бесплатным и быстрым интернетом в ресторане.</p>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${#lists.contains(amenities, 'Доставка')}">
+                        <div class="amenity-card">
+                            <i class="fas fa-box"></i>
+                            <h3>Доставка</h3>
+                            <p>Закажите любимые блюда прямо к двери с нашей быстрой доставкой.</p>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${#lists.contains(amenities, 'Самовывоз')}">
+                        <div class="amenity-card">
+                            <i class="fas fa-shopping-bag"></i>
+                            <h3>Самовывоз</h3>
+                            <p>Заберите заказ самостоятельно в удобное для вас время.</p>
+                        </div>
+                    </th:block>
+
+                    <th:block th:if="${#lists.contains(amenities, 'Уличные Сиденья')}">
+                        <div class="amenity-card">
+                            <i class="fas fa-cocktail"></i>
+                            <h3>Барная стойка</h3>
+                            <p>Наслаждайтесь напитками и закусками за стильной барной стойкой.</p>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+
+            <div class="location-section">
+                <h2>Location</h2>
+                <div class="location-card">
+                    <div class="location-info">
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Restaurant Row, Manhattan, New York</p>
+                        <p><i class="fas fa-phone"></i> (212) 555-0123</p>
+                        <p><i class="fas fa-envelope"></i> info@lapiazzaitaliana.com</p>
+                    </div>
+                    <div class="map-placeholder">
+                        <!-- Map would be integrated here -->
+                        <img src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=800" alt="Restaurant Location Map">
+                    </div>
+                </div>
+            </div>
+
+            <section class="reviews bg-white dark:bg-gray-800">
+                <div class="reviews-container"> <!-- обёртка-контейнер -->
+                    <h2 class="text-2xl font-semibold mb-6">Отзывы</h2>
+
+                    <!-- Общие оценки -->
+                    <div class="mb-8">
+                        <div class="flex items-center mb-2">
+                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-gray-300 me-1 dark:text-gray-500" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">4.95</p>
+                            <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">out of</p>
+                            <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">5</p>
+                        </div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">1,745 global ratings</p>
+
+                        <div class="flex items-center mt-4">
+                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">5 star</a>
+                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 70%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">70%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">4 star</a>
+                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 17%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">17%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">3 star</a>
+                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 8%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">8%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">2 star</a>
+                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 4%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">4%</span>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">1 star</a>
+                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
+                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 1%"></div>
+                            </div>
+                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">1%</span>
+                        </div>
+                    </div>
+
+                    <!-- Пример 1 отзыва -->
+                    <article class="mb-8">
+                        <div class="flex items-center mb-4">
+                            <img class="w-10 h-10 me-4 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt="">
+                            <div class="font-medium dark:text-white">
+                                <p>Jese Leos
+                                    <time datetime="2014-08-16 19:00" class="block text-sm text-gray-500 dark:text-gray-400">
+                                        Joined on August 2014
+                                    </time>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-1 space-x-1 rtl:space-x-reverse">
+                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <svg class="w-4 h-4 text-gray-300 dark:text-gray-500" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                            </svg>
+                            <h3 class="ms-2 text-sm font-semibold text-gray-900 dark:text-white">Thinking to buy another one!</h3>
+                        </div>
+                        <footer class="mb-5 text-sm text-gray-500 dark:text-gray-400">
+                            <p>Reviewed on
+                                <time datetime="2017-03-03 19:00">March 3, 2017</time>
+                            </p>
+                        </footer>
+                        <p class="mb-2 text-gray-500 dark:text-gray-400">
+                            This is my third Invicta Pro Diver. They are just fantastic value for money...
+                        </p>
+                        <p class="mb-3 text-gray-500 dark:text-gray-400">
+                            It is obviously not the same build quality as those very expensive watches...
+                        </p>
+                        <aside>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">19 people found this helpful</p>
+                            <div class="flex items-center mt-3">
+                                <a href="#"
+                                   class="px-2 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg
+                                  border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4
+                                  focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400
+                                  dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    Helpful <!-- TODO: Сделать проверку, нажата ли уже кнопка -->
+                                </a>
+                            </div>
+                        </aside>
+                    </article>
+                </div>
+            </section>
+        </section>
+
+        <!-- TODO: Сделать проверку на дни в которые работает и также часы должны подстраиваться под часы работы ресторана -->
+        <aside class="sidebar">
+            <div class="reservation-card">
+                <h2>Забронировать стол</h2>
+                <!--
+                    1) Связываем форму с BookingDto, используя th:object.
+                    2) method="post"
+                    3) action="/bookings/create" - урл вашего контроллера
+                -->
+                <form class="reservation-form"
+                      th:object="${bookingDto}"
+                      th:action="@{/bookings/create}"
+                      method="post">
+
+                    <!-- Скрытое поле для передачи restaurantId -->
+                    <input type="hidden" name="restaurantId" th:value="${restaurant.id}" />
+
+                    <!-- Поле выбора даты -->
+                    <div class="form-group">
+                        <label for="reservationDate">Дата</label>
+                        <!-- th:field привязывает это поле к bookingDto.reservationDate -->
+                        <input type="date" id="reservationDate" th:field="*{reservationDate}" required />
+                    </div>
+
+                    <!-- Поле выбора времени (с 12:00 до 18:00) -->
+                    <div class="form-group">
+                        <label for="reservationTime">Время</label>
+                        <!-- th:field привязывает к bookingDto.reservationTime -->
+                        <select id="reservationTime" th:field="*{reservationTime}" required>
+                            <option value="">Выберите время</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                        </select>
+                    </div>
+
+                    <!-- Поле выбора количества гостей -->
+                    <div class="form-group">
+                        <label for="guestCount">Количество гостей</label>
+                        <!-- th:field -> bookingDto.guestCount -->
+                        <select id="guestCount" th:field="*{guestCount}" required>
+                            <option value="">Выберите количество гостей</option>
+                            <option value="1">1 человек</option>
+                            <option value="2">2 человека</option>
+                            <option value="3">3 человека</option>
+                            <option value="4">4 человека</option>
+                            <option value="5">5 человек</option>
+                            <option value="6">6 человек</option>
+                            <option value="7">7 человек</option>
+                            <option value="8">8 человек</option>
+                        </select>
+                    </div>
+
+                    <!-- Поле для примечания -->
+                    <div class="form-group">
+                        <label for="note">Примечание</label>
+                        <!-- th:field -> bookingDto.note -->
+                        <textarea id="note" th:field="*{note}" rows="3"
+                                  placeholder="Укажите любые особые пожелания..."
+                                  style="resize: vertical;"></textarea>
+                    </div>
+
+                    <!-- Кнопка отправки формы -->
+                    <button type="submit" class="reservation-button">
+                        Забронировать
+                    </button>
+                </form>
+            </div>
+        </aside>
+    </div>
+
+    <section class="similar-restaurants">
+        <h2>You May Also Like</h2>
+        <div class="restaurant-grid" id="similarRestaurants">
+            <!-- Similar restaurants will be populated by JavaScript -->
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>About Whitable</h3>
+            <p>Revolutionizing the dining experience through innovative reservation technology and exceptional service.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h3>For Restaurants</h3>
+            <ul>
+                <li><a href="#">Partner With Us</a></li>
+                <li><a href="#">Restaurant Dashboard</a></li>
+                <li><a href="#">Success Stories</a></li>
+                <li><a href="#">Marketing Tools</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>For Diners</h3>
+            <ul>
+                <li><a href="#">Search Restaurants</a></li>
+                <li><a href="#">Loyalty Program</a></li>
+                <li><a href="#">Mobile App</a></li>
+                <li><a href="#">Gift Cards</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Support</h3>
+            <ul>
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">FAQs</a></li>
+                <li><a href="#">Feedback</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Legal</h3>
+            <ul>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Cookie Policy</a></li>
+                <li><a href="#">GDPR Compliance</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Whitable. All rights reserved.</p>
+        <div class="footer-bottom-links">
+            <a href="#">Sitemap</a>
+            <a href="#">Accessibility</a>
+            <a href="#">Security</a>
+            <a href="#">Press Kit</a>
+        </div>
+    </div>
+</footer>
+
+<script th:inline="javascript">
+    const dateInput = document.getElementById('date');
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Добавляем 1 день
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+    dateInput.min = minDate;
+
+    /*<![CDATA[*/
+    // Передаём данные рабочих часов ресторана из модели
+    var openingHours = '[[${openingHours}]]' {};
+
+    // Маппинг индекса дня (JS: 0 = Sunday, 1 = Monday, ...) в название дня, как в openingHours (например, "Monday")
+    var dayMapping = {
+        0: "Sunday",
+        1: "Monday",
+        2: "Tuesday",
+        3: "Wednesday",
+        4: "Thursday",
+        5: "Friday",
+        6: "Saturday"
+    };
+
+    // Элементы формы
+    var reservationDate = document.getElementById("reservationDate");
+    var reservationTime = document.getElementById("reservationTime");
+    var reservationError = document.getElementById("reservationError");
+
+    reservationDate.addEventListener("change", function() {
+        // Получаем выбранную дату и определяем её день недели
+        var selectedDate = new Date(this.value);
+        if (isNaN(selectedDate)) {
+            return;
+        }
+        var day = dayMapping[selectedDate.getDay()];
+        var hoursInfo = openingHours[day];
+
+        // Если для выбранного дня нет данных или день закрыт (сравниваем без учёта регистра)
+        if (!hoursInfo || hoursInfo.trim().toLowerCase() === "closed") {
+            reservationTime.innerHTML = "<option value=''>Ресторан закрыт в этот день</option>";
+            reservationTime.disabled = true;
+            reservationError.innerText = "Ресторан закрыт в выбранный день.";
+        } else {
+            // Ожидаем формат "HH:mm - HH:mm", например: "09:00 - 18:00"
+            var parts = hoursInfo.split("-");
+            if (parts.length < 2) {
+                reservationTime.innerHTML = "<option value=''>Некорректное время работы</option>";
+                reservationTime.disabled = true;
+                reservationError.innerText = "Некорректное время работы ресторана.";
+            } else {
+                var startStr = parts[0].trim();
+                var endStr = parts[1].trim();
+
+                // Извлекаем часы в числовом виде (например, "09:00" → 9)
+                var startHour = parseInt(startStr.split(":")[0]);
+                var endHour = parseInt(endStr.split(":")[0]);
+
+                // Очистка предыдущих опций
+                reservationTime.innerHTML = "";
+                var defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.textContent = "Выберите время";
+                reservationTime.appendChild(defaultOption);
+
+                // Генерируем варианты времени с шагом в 1 час
+                for (var hour = startHour; hour < endHour; hour++) {
+                    var hourStr = (hour < 10 ? "0" : "") + hour + ":00";
+                    var option = document.createElement("option");
+                    option.value = hourStr;
+                    option.textContent = hourStr;
+                    reservationTime.appendChild(option);
+                }
+                reservationTime.disabled = false;
+                reservationError.innerText = "";
+            }
+        }
+    });
+    /*]]>*/
+</script>
+</body>
+</html>
