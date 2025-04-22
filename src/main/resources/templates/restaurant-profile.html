@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>La Piazza Italiana - Restaurant Profile | Whitable</title>
+    <title th:text="${restaurant.getName()}">Whitable</title>
     <link rel="stylesheet" href="/css/restaurant-profile.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -44,7 +44,6 @@
                         <i class="fas fa-dollar-sign"></i>
                         <span class="price-range" th:text="${restaurant.getAverageCheck()}">$$</span>
                     </div>
-                    <span class="rating rating-5" id="restaurantRating">4.8</span>
                 </div>
             </div>
         </div>
@@ -126,155 +125,127 @@
             </div>
 
             <div class="location-section">
-                <h2>Location</h2>
+                <h2>Местоположение и Информация</h2>
                 <div class="location-card">
                     <div class="location-info">
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Restaurant Row, Manhattan, New York</p>
-                        <p><i class="fas fa-phone"></i> (212) 555-0123</p>
-                        <p><i class="fas fa-envelope"></i> info@lapiazzaitaliana.com</p>
+                        <p th:utext="'<i class=\'fas fa-map-marker-alt\'></i> ' + ${restaurant.getAddress()}">
+                            <i class="fas fa-map-marker-alt"></i> 123 Restaurant Row, Manhattan, New York
+                        </p>
+                        <p th:utext="'<i class=\'fas fa-phone\'></i> ' + ${restaurant.getPhoneNumber()}">
+                            <i class="fas fa-phone"></i> (212) 555-0123
+                        </p>
                     </div>
-                    <div class="map-placeholder">
-                        <!-- Map would be integrated here -->
-                        <img src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=800" alt="Restaurant Location Map">
+                    <div class="map-placeholder w-full h-96 rounded-xl overflow-hidden">
+                        <div style="position:relative;overflow:hidden;"><a href="https://yandex.kz/maps/ru/163/astana/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Астана</a><a href="https://yandex.kz/maps/ru/163/astana/?ll=71.428425%2C51.123390&utm_medium=mapframe&utm_source=maps&z=16" style="color:#eee;font-size:12px;position:absolute;top:14px;">Астана — Яндекс Карты</a><iframe src="https://yandex.kz/map-widget/v1/?ll=71.428425%2C51.123390&z=16" width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe></div>
                     </div>
                 </div>
             </div>
 
             <section class="reviews bg-white dark:bg-gray-800">
                 <div class="reviews-container"> <!-- обёртка-контейнер -->
-                    <h2 class="text-2xl font-semibold mb-6">Отзывы</h2>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-semibold">Отзывы</h2>
+
+                        <div th:if="${canReview}">
+                            <button id="openReviewModal" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                                + Оставить отзыв
+                            </button>
+                        </div>
+                    </div>
 
                     <!-- Общие оценки -->
                     <div class="mb-8">
                         <div class="flex items-center mb-2">
-                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-gray-300 me-1 dark:text-gray-500" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">4.95</p>
-                            <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">out of</p>
-                            <p class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">5</p>
-                        </div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">1,745 global ratings</p>
+                            <!-- Звёзды -->
+                            <span th:each="i : ${#numbers.sequence(1,5)}">
+                                <svg class="w-5 h-5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="currentColor" viewBox="0 0 22 20"
+                                     th:classappend="${i <= T(java.lang.Math).floor(restaurant.rating)} ? 'text-yellow-300' :
+                                                     (${i - 1 < restaurant.rating} ? 'text-yellow-300 opacity-50' : 'text-gray-300 dark:text-gray-500')">
+                                    <path
+                                            d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534
+                                           1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535
+                                           1.535 0 0 0 1.463 9.2l3.656 3.563-.863
+                                           5.031a1.532 1.532 0 0 0 2.226
+                                           1.616L11 17.033l4.518 2.375a1.534
+                                           1.534 0 0 0 2.226-1.617l-.863-5.03L20.537
+                                           9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                </svg>
+                            </span>
 
-                        <div class="flex items-center mt-4">
-                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">5 star</a>
-                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
-                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 70%"></div>
+                            <!-- Цифровой рейтинг + подпись -->
+                            <div class="flex items-center text-base font-semibold text-gray-600 dark:text-gray-300 ms-3" style="margin-left: 10px">
+                                <span th:text="${restaurant.getRating()}">4.95</span>
+                                <span class="mx-1">из</span>
+                                <span>5</span>
                             </div>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">70%</span>
                         </div>
-                        <div class="flex items-center mt-4">
-                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">4 star</a>
-                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
-                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 17%"></div>
-                            </div>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">17%</span>
-                        </div>
-                        <div class="flex items-center mt-4">
-                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">3 star</a>
-                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
-                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 8%"></div>
-                            </div>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">8%</span>
-                        </div>
-                        <div class="flex items-center mt-4">
-                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">2 star</a>
-                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
-                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 4%"></div>
-                            </div>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">4%</span>
-                        </div>
-                        <div class="flex items-center mt-4">
-                            <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">1 star</a>
-                            <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded-sm dark:bg-gray-700">
-                                <div class="h-5 bg-yellow-300 rounded-sm" style="width: 1%"></div>
-                            </div>
-                            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">1%</span>
-                        </div>
+
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Всего отзывов: <span th:text="${restaurant.getRatingCount()}">1234</span>
+                        </p>
                     </div>
 
-                    <!-- Пример 1 отзыва -->
-                    <article class="mb-8">
+                    <article th:each="review : ${reviews}" class="mb-8">
                         <div class="flex items-center mb-4">
-                            <img class="w-10 h-10 me-4 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt="">
+                            <img class="w-10 h-10 me-4 rounded-full" src="/img/user.png" alt="User avatar">
                             <div class="font-medium dark:text-white">
-                                <p>Jese Leos
-                                    <time datetime="2014-08-16 19:00" class="block text-sm text-gray-500 dark:text-gray-400">
-                                        Joined on August 2014
+                                <p th:text="${review.getUser().getUsername()}">
+                                    Имя пользователя
+                                    <time th:text="'Reviewed on ' + ${#temporals.format(review.createdAt, 'MMMM yyyy')}"
+                                          class="block text-sm text-gray-500 dark:text-gray-400">
+                                        Reviewed on August 2014
                                     </time>
                                 </p>
                             </div>
                         </div>
+
                         <div class="flex items-center mb-1 space-x-1 rtl:space-x-reverse">
-                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg class="w-4 h-4 text-gray-300 dark:text-gray-500" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                <path
-                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <h3 class="ms-2 text-sm font-semibold text-gray-900 dark:text-white">Thinking to buy another one!</h3>
+                            <!-- Отображение звёздочек -->
+                            <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                <svg th:classappend="${i <= review.rating} ? 'text-yellow-300' : 'text-gray-300 dark:text-gray-500'"
+                                     class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="currentColor" viewBox="0 0 22 20">
+                                    <path
+                                            d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534
+                                           1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535
+                                           1.535 0 0 0 1.463 9.2l3.656 3.563-.863
+                                           5.031a1.532 1.532 0 0 0 2.226
+                                           1.616L11 17.033l4.518 2.375a1.534
+                                           1.534 0 0 0 2.226-1.617l-.863-5.03L20.537
+                                           9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                </svg>
+                            </span>
+                            <h3 class="ms-2 text-sm font-semibold text-gray-900 dark:text-white"
+                                th:text="${review.title}">
+                                Title
+                            </h3>
                         </div>
+
                         <footer class="mb-5 text-sm text-gray-500 dark:text-gray-400">
-                            <p>Reviewed on
-                                <time datetime="2017-03-03 19:00">March 3, 2017</time>
+                            <p>Отзыв оставлен:
+                                <time th:text="${#temporals.format(review.createdAt, 'd MMMM yyyy', T(java.util.Locale).forLanguageTag('ru'))}">
+                                    12 апреля 2025
+                                </time>
                             </p>
                         </footer>
-                        <p class="mb-2 text-gray-500 dark:text-gray-400">
-                            This is my third Invicta Pro Diver. They are just fantastic value for money...
+
+                        <p class="mb-2 text-gray-500 dark:text-gray-400" th:text="${review.content}">
+                            Основной текст отзыва
                         </p>
-                        <p class="mb-3 text-gray-500 dark:text-gray-400">
-                            It is obviously not the same build quality as those very expensive watches...
-                        </p>
+
                         <aside>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">19 people found this helpful</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"
+                               th:text="${review.helpfulCount + ' человек посчитали отзыв полезным!'}">
+                                19 people found this helpful
+                            </p>
                             <div class="flex items-center mt-3">
                                 <a href="#"
                                    class="px-2 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg
-                                  border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4
-                                  focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400
-                                  dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                    Helpful <!-- TODO: Сделать проверку, нажата ли уже кнопка -->
+                      border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4
+                      focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400
+                      dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    Полезно
                                 </a>
                             </div>
                         </aside>
@@ -283,15 +254,9 @@
             </section>
         </section>
 
-        <!-- TODO: Сделать проверку на дни в которые работает и также часы должны подстраиваться под часы работы ресторана -->
         <aside class="sidebar">
             <div class="reservation-card">
                 <h2>Забронировать стол</h2>
-                <!--
-                    1) Связываем форму с BookingDto, используя th:object.
-                    2) method="post"
-                    3) action="/bookings/create" - урл вашего контроллера
-                -->
                 <form class="reservation-form"
                       th:object="${bookingDto}"
                       th:action="@{/bookings/create}"
@@ -303,30 +268,24 @@
                     <!-- Поле выбора даты -->
                     <div class="form-group">
                         <label for="reservationDate">Дата</label>
-                        <!-- th:field привязывает это поле к bookingDto.reservationDate -->
                         <input type="date" id="reservationDate" th:field="*{reservationDate}" required />
                     </div>
 
-                    <!-- Поле выбора времени (с 12:00 до 18:00) -->
+                    <!-- Поле выбора времени, будет обновляться скриптом -->
                     <div class="form-group">
                         <label for="reservationTime">Время</label>
-                        <!-- th:field привязывает к bookingDto.reservationTime -->
                         <select id="reservationTime" th:field="*{reservationTime}" required>
                             <option value="">Выберите время</option>
-                            <option value="12:00">12:00</option>
-                            <option value="13:00">13:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="15:00">15:00</option>
-                            <option value="16:00">16:00</option>
-                            <option value="17:00">17:00</option>
-                            <option value="18:00">18:00</option>
+                            <!-- Опции будут генерироваться динамически -->
                         </select>
                     </div>
+
+                    <!-- Контейнер для вывода сообщения об ошибке по времени бронирования -->
+                    <p id="reservationError" class="text-red-600 font-medium text-sm mt-2"></p>
 
                     <!-- Поле выбора количества гостей -->
                     <div class="form-group">
                         <label for="guestCount">Количество гостей</label>
-                        <!-- th:field -> bookingDto.guestCount -->
                         <select id="guestCount" th:field="*{guestCount}" required>
                             <option value="">Выберите количество гостей</option>
                             <option value="1">1 человек</option>
@@ -343,10 +302,7 @@
                     <!-- Поле для примечания -->
                     <div class="form-group">
                         <label for="note">Примечание</label>
-                        <!-- th:field -> bookingDto.note -->
-                        <textarea id="note" th:field="*{note}" rows="3"
-                                  placeholder="Укажите любые особые пожелания..."
-                                  style="resize: vertical;"></textarea>
+                        <textarea id="note" th:field="*{note}" rows="3" placeholder="Укажите любые особые пожелания..." style="resize: vertical;"></textarea>
                     </div>
 
                     <!-- Кнопка отправки формы -->
@@ -359,9 +315,9 @@
     </div>
 
     <section class="similar-restaurants">
-        <h2>You May Also Like</h2>
+        <h2>Также могут понравиться</h2>
         <div class="restaurant-grid" id="similarRestaurants">
-            <!-- Similar restaurants will be populated by JavaScript -->
+            <!-- TODO: Сделать карточки и вытащить из базы данных рестораны -->
         </div>
     </section>
 </main>
@@ -425,84 +381,228 @@
     </div>
 </footer>
 
+<!-- Модальное окно для отзыва -->
+<div id="reviewModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-md shadow-md w-96">
+        <h2 class="text-2xl mb-4">Оставить отзыв</h2>
+        <form id="reviewForm" th:action="@{/review/create}" method="post">
+            <input type="hidden" name="restaurantId" th:value="${restaurant.id}" />
+
+            <!-- Поле для заголовка отзыва -->
+            <div class="mb-4">
+                <label class="block mb-1" for="title">Заголовок:</label>
+                <input id="title" name="title" type="text"
+                       class="w-full border border-gray-300 rounded-md p-2"
+                       placeholder="Введите заголовок отзыва" required />
+            </div>
+
+            <!-- Поле для содержания отзыва -->
+            <div class="mb-4">
+                <label class="block mb-1" for="content">Отзыв:</label>
+                <textarea id="content" name="content" rows="4"
+                          class="w-full border border-gray-300 rounded-md p-2"
+                          placeholder="Напишите свой отзыв" required></textarea>
+            </div>
+
+            <!-- Поле для оценки -->
+            <div class="mb-4">
+                <label class="block mb-1" for="rating">Оценка:</label>
+                <input id="rating" name="rating" type="number" min="1" max="5"
+                       class="w-full border border-gray-300 rounded-md p-2"
+                       placeholder="Введите число от 1 до 5" required />
+            </div>
+
+            <!-- Блок для вывода ошибки -->
+            <div id="reviewError" class="text-red-600 mb-2"></div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" id="closeReviewModal" class="bg-gray-500 text-white px-4 py-2 rounded">
+                    Отмена
+                </button>
+                <button type="submit" id="submitReview" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                    Отправить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <script th:inline="javascript">
-    const dateInput = document.getElementById('date');
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1); // Добавляем 1 день
-    const yyyy = tomorrow.getFullYear();
-    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-    const dd = String(tomorrow.getDate()).padStart(2, '0');
-    const minDate = `${yyyy}-${mm}-${dd}`;
-    dateInput.min = minDate;
-
     /*<![CDATA[*/
-    // Передаём данные рабочих часов ресторана из модели
-    var openingHours = '[[${openingHours}]]' {};
+    document.addEventListener("DOMContentLoaded", function() {
+        // Элементы формы
+        var reservationDate = document.getElementById("reservationDate");
+        var reservationTime = document.getElementById("reservationTime");
+        var guestCountSelect = document.getElementById("guestCount");
+        var reservationError = document.getElementById("reservationError");
+        var reservationButton = document.querySelector('.reservation-button');
 
-    // Маппинг индекса дня (JS: 0 = Sunday, 1 = Monday, ...) в название дня, как в openingHours (например, "Monday")
-    var dayMapping = {
-        0: "Sunday",
-        1: "Monday",
-        2: "Tuesday",
-        3: "Wednesday",
-        4: "Thursday",
-        5: "Friday",
-        6: "Saturday"
-    };
+        // По умолчанию кнопка заблокирована
+        reservationButton.disabled = true;
 
-    // Элементы формы
-    var reservationDate = document.getElementById("reservationDate");
-    var reservationTime = document.getElementById("reservationTime");
-    var reservationError = document.getElementById("reservationError");
-
-    reservationDate.addEventListener("change", function() {
-        // Получаем выбранную дату и определяем её день недели
-        var selectedDate = new Date(this.value);
-        if (isNaN(selectedDate)) {
-            return;
+        // Функция форматирования даты
+        function formatDate(date) {
+            var yyyy = date.getFullYear();
+            var mm = String(date.getMonth() + 1).padStart(2, '0');
+            var dd = String(date.getDate()).padStart(2, '0');
+            return yyyy + '-' + mm + '-' + dd;
         }
-        var day = dayMapping[selectedDate.getDay()];
-        var hoursInfo = openingHours[day];
 
-        // Если для выбранного дня нет данных или день закрыт (сравниваем без учёта регистра)
-        if (!hoursInfo || hoursInfo.trim().toLowerCase() === "closed") {
-            reservationTime.innerHTML = "<option value=''>Ресторан закрыт в этот день</option>";
-            reservationTime.disabled = true;
-            reservationError.innerText = "Ресторан закрыт в выбранный день.";
-        } else {
-            // Ожидаем формат "HH:mm - HH:mm", например: "09:00 - 18:00"
-            var parts = hoursInfo.split("-");
-            if (parts.length < 2) {
-                reservationTime.innerHTML = "<option value=''>Некорректное время работы</option>";
-                reservationTime.disabled = true;
-                reservationError.innerText = "Некорректное время работы ресторана.";
+        // Устанавливаем min и max для поля даты
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        reservationDate.min = formatDate(tomorrow);
+        var maxDate = new Date(tomorrow);
+        maxDate.setDate(maxDate.getDate() + 13);
+        reservationDate.max = formatDate(maxDate);
+
+        // Данные, получаемые с backend (предполагается, что они правильно подставляются)
+        var openingHours = /*[[${openingHours}]]*/ {};
+        var bookings = /*[[${bookings}]]*/ {};
+        var capacity = /*[[${capacity}]]*/;
+
+        // Маппинг индекса дня в название дня
+        var dayMapping = {
+            0: "Sunday",
+            1: "Monday",
+            2: "Tuesday",
+            3: "Wednesday",
+            4: "Thursday",
+            5: "Friday",
+            6: "Saturday"
+        };
+
+        // Функция для проверки заполненности всех обязательных полей
+        function allRequiredFieldsFilled() {
+            return reservationDate.value.trim() !== "" &&
+                reservationTime.value.trim() !== "" &&
+                guestCountSelect.value.trim() !== "";
+        }
+
+        // Функция обновления стилей кнопки
+        function updateReservationButton(isDisabled) {
+            if (isDisabled) {
+                reservationButton.className = "bg-gray-300 px-4 py-2 rounded-md cursor-not-allowed opacity-50";
+                reservationButton.disabled = true;
             } else {
-                var startStr = parts[0].trim();
-                var endStr = parts[1].trim();
-
-                // Извлекаем часы в числовом виде (например, "09:00" → 9)
-                var startHour = parseInt(startStr.split(":")[0]);
-                var endHour = parseInt(endStr.split(":")[0]);
-
-                // Очистка предыдущих опций
-                reservationTime.innerHTML = "";
-                var defaultOption = document.createElement("option");
-                defaultOption.value = "";
-                defaultOption.textContent = "Выберите время";
-                reservationTime.appendChild(defaultOption);
-
-                // Генерируем варианты времени с шагом в 1 час
-                for (var hour = startHour; hour < endHour; hour++) {
-                    var hourStr = (hour < 10 ? "0" : "") + hour + ":00";
-                    var option = document.createElement("option");
-                    option.value = hourStr;
-                    option.textContent = hourStr;
-                    reservationTime.appendChild(option);
-                }
-                reservationTime.disabled = false;
-                reservationError.innerText = "";
+                // Пример активного состояния — меняйте на нужные вам классы
+                reservationButton.className = "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition";
+                reservationButton.disabled = false;
             }
         }
+
+        // Функция проверки доступности бронирования
+        function checkAvailability() {
+            if (!allRequiredFieldsFilled()) {
+                reservationError.innerText = "Заполните все обязательные поля";
+                updateReservationButton(true);
+                return;
+            }
+            var selectedDate = reservationDate.value; // "YYYY-MM-DD"
+            var selectedTime = reservationTime.value;   // "HH:mm"
+            var selectedGuestCount = parseInt(guestCountSelect.value, 10);
+
+            var dateBookings = bookings[selectedDate] || {};
+            var currentCount = dateBookings[selectedTime] || 0;
+
+            if ((currentCount + selectedGuestCount) > capacity) {
+                reservationError.innerText = "Невозможно забронировать. На выбранное время доступно: " + (capacity - currentCount) + " мест(а).";
+                updateReservationButton(true);
+            } else {
+                reservationError.innerText = "";
+                updateReservationButton(false);
+            }
+        }
+
+        // Обработчик для изменения времени работы ресторана по выбранной дате
+        reservationDate.addEventListener("change", function() {
+            var selectedDate = new Date(this.value);
+            if (isNaN(selectedDate)) {
+                console.log("Неверная дата:", this.value);
+                return;
+            }
+            var day = dayMapping[selectedDate.getDay()];
+            var hoursInfo = openingHours[day];
+
+            if (!hoursInfo || hoursInfo.trim().toLowerCase() === "closed") {
+                reservationTime.innerHTML = "<option value=''>Ресторан закрыт в этот день</option>";
+                reservationTime.disabled = true;
+                reservationError.innerText = "Ресторан закрыт в выбранный день.";
+            } else {
+                var parts = hoursInfo.split("-");
+                if (parts.length < 2) {
+                    reservationTime.innerHTML = "<option value=''>Некорректное время работы</option>";
+                    reservationTime.disabled = true;
+                    reservationError.innerText = "Некорректное время работы ресторана.";
+                } else {
+                    var startStr = parts[0].trim();
+                    var endStr = parts[1].trim();
+                    var startHour = parseInt(startStr.split(":")[0], 10);
+                    var endHour = parseInt(endStr.split(":")[0], 10);
+                    var effectiveEndHour = (endHour <= startHour) ? endHour + 24 : endHour;
+
+                    reservationTime.innerHTML = "";
+                    var defaultOption = document.createElement("option");
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Выберите время";
+                    reservationTime.appendChild(defaultOption);
+
+                    for (var hour = startHour; hour < effectiveEndHour; hour++) {
+                        var displayHour = hour % 24;
+                        var hourStr = (displayHour < 10 ? "0" : "") + displayHour + ":00";
+                        var option = document.createElement("option");
+                        option.value = hourStr;
+                        option.textContent = hourStr;
+                        reservationTime.appendChild(option);
+                    }
+                    reservationTime.disabled = false;
+                    reservationError.innerText = "";
+                }
+            }
+            // После обновления опций времени проверяем доступность
+            checkAvailability();
+        });
+
+        // Обработчики событий на изменение полей
+        reservationDate.addEventListener("input", checkAvailability);
+        reservationTime.addEventListener("change", checkAvailability);
+        guestCountSelect.addEventListener("change", checkAvailability);
+
+        // Проверка сразу после загрузки
+        checkAvailability();
+
+        // Открытие модального окна при клике на кнопку "Оставить отзыв"
+        var openReviewModal = document.getElementById("openReviewModal");
+        var reviewModal = document.getElementById("reviewModal");
+        var closeReviewModal = document.getElementById("closeReviewModal");
+        var reviewForm = document.getElementById("reviewForm");
+        var reviewError = document.getElementById("reviewError");
+
+        if (openReviewModal) {
+            openReviewModal.addEventListener("click", function() {
+                reviewModal.classList.remove("hidden");
+            });
+        }
+
+        // Закрытие модального окна
+        if (closeReviewModal) {
+            closeReviewModal.addEventListener("click", function() {
+                reviewModal.classList.add("hidden");
+                reviewError.innerText = "";
+                reviewForm.reset();
+            });
+        }
+
+        // Валидация формы при отправке
+        reviewForm.addEventListener("submit", function(event) {
+            var content = document.getElementById("content").value.trim();
+            var rating = document.getElementById("rating").value.trim();
+
+            if (!content || !rating) {
+                reviewError.innerText = "Пожалуйста, заполните все поля.";
+                event.preventDefault();
+            }
+        });
     });
     /*]]>*/
 </script>

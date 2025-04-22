@@ -4,7 +4,9 @@ import com.api.whitable.dto.BookingDto;
 import com.api.whitable.model.*;
 import com.api.whitable.repository.BookingRepository;
 import com.api.whitable.repository.RestaurantRepository;
+import com.api.whitable.repository.ReviewRepository;
 import com.api.whitable.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,10 +24,10 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
+    private final ReviewRepository reviewRepository;
 
 
     public void create(BookingDto dto, Long userId, Long restaurantId) throws IllegalArgumentException {
-        // TODO: Прочекать доступность типа да
         Booking bookingToSave = new Booking();
         bookingToSave.setGuestCount(dto.getGuestCount());
 
@@ -60,7 +64,18 @@ public class BookingService {
                 () -> new IllegalArgumentException("Пользователь с указанным ID не найден!")
         );
 
-        return bookingRepository.findAllByUserId(userId);
+        List<Booking> bookings = bookingRepository.findAllByUserId(userId);
+
+        for (Booking booking : bookings) {
+            if (booking.getEndTime().isBefore(LocalDateTime.now()) &&
+                    booking.getBookingStatus() == Status.CONFIRMED) {
+
+                booking.setBookingStatus(Status.COMPLETED);
+                bookingRepository.save(booking); // сохраняем изменения
+            }
+        }
+
+        return bookings;
     }
 
     public void cancelBooking(Long bookingId, Long userId) {
@@ -73,4 +88,45 @@ public class BookingService {
 
         bookingRepository.delete(booking);
     }
+
+    @Transactional
+    public Map<String, Map<String, Integer>> getBookingsMapForRestaurant(Long restaurantId, LocalDate startDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = startDate.plusDays(14).atTime(23, 59, 59);
+
+        // Получаем бронирования из базы
+        List<Booking> bookings = bookingRepository.findBookingsByRestaurantAndStartTimeBetween(restaurantId, startDateTime, endDateTime);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        // Группируем бронирования по дате (yyyy-MM-dd) и времени (с округлением до минут)
+        Map<String, Map<String, Integer>> bookingsMap = bookings.stream()
+                .collect(Collectors.groupingBy(
+                        booking -> booking.getStartTime().toLocalDate().toString(),
+                        Collectors.groupingBy(
+                                booking -> booking.getStartTime().toLocalTime().format(timeFormatter),
+                                Collectors.summingInt(Booking::getGuestCount)
+                        )
+                ));
+
+        return bookingsMap;
+    }
+
+    public boolean canLeaveReview(Long userId, Long restaurantId) {
+        // Проверяем, есть ли хотя бы одно завершённое бронирование
+        List<Booking> bookings = bookingRepository.findByUserIdAndRestaurantIdAndBookingStatus(
+                userId, restaurantId, Status.COMPLETED
+        );
+
+        // Если брони нет — сразу false
+        if (bookings.isEmpty()) {
+            return false;
+        }
+
+        // Проверяем, оставлял ли пользователь уже отзыв
+        boolean alreadyLeftReview = reviewRepository.existsByUserIdAndRestaurantId(userId, restaurantId);
+
+        // Можно оставить отзыв, если была завершённая бронь и отзыв ещё не оставляли
+        return !alreadyLeftReview;
+    }
+
 }

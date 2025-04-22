@@ -20,14 +20,14 @@ public class ReviewService {
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
 
-    public void create(ReviewDto dto) throws NullPointerException {
-        Restaurant restaurant = restaurantRepository.findById(dto.getRestaurantId()).orElse(null);
+    public void create(ReviewDto dto, Long userId, Long restaurantId) throws NullPointerException {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
 
         if (restaurant == null) {
             throw new NullPointerException("Ресторан с указанным ID не найден");
         }
 
-        User user = userRepository.findById(dto.getUserId()).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
             throw new NullPointerException("Указанный пользователь не найден!");
@@ -43,22 +43,24 @@ public class ReviewService {
         Review reviewToSave = new Review();
         reviewToSave.setCreatedAt(LocalDate.now());
         reviewToSave.setUser(user);
+        reviewToSave.setTitle(dto.getTitle());
         reviewToSave.setRating(dto.getRating());
         reviewToSave.setRestaurant(restaurant);
         reviewToSave.setContent(dto.getContent());
+        reviewToSave.setHelpfulCount(0); // при инициализации 0 как обычно
 
         restaurantRepository.save(restaurant);
         reviewRepository.save(reviewToSave);
     }
 
-    public void delete(ReviewDto dto) {
+    public void delete(ReviewDto dto, Long restaurantId) {
         Review review = reviewRepository.findById(dto.getId()).orElse(null);
 
         if (review == null) {
             throw new NullPointerException("Отзыва с указанным ID не существует");
         }
 
-        Restaurant restaurant = restaurantRepository.findById(dto.getRestaurantId()).orElse(null);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
 
         if (restaurant == null) {
             throw new NullPointerException("Ресторана с указанным ID не существует!");

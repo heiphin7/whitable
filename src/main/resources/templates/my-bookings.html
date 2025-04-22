@@ -58,7 +58,7 @@
                         <p th:text="${#temporals.format(booking.startTime, 'dd MMMM yyyy, HH:mm')}">
                             Дата и время
                         </p>
-                        <p th:text="${booking.guestCount} + ' ' + (${booking.guestCount == 1} ? 'гость' : 'гостей')}">
+                        <p th:text="${booking.guestCount} + ' ' + (booking.guestCount == 1 ? 'гость' : 'гостей')"></p>
                             Гости
                         </p>
                         <p th:if="${booking.note != null}" th:text="'Примечание: ' + ${booking.note}">

@@ -27,7 +27,7 @@ public class BookingController {
         Long userId = jwtTokenService.getUserIdFromToken(request);
         bookingService.create(dto, userId, restaurantId);
 
-        return "redirect:/my-bookings";
+        return "redirect:/bookings/my-bookings";
     }
 
     @GetMapping("/my-bookings")

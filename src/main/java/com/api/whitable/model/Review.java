@@ -25,8 +25,10 @@ public class Review {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
+    private String title;
     private Integer rating;
     private String content;
     private LocalDate createdAt;
+    private Integer helpfulCount; // Типа лайки
 }
 

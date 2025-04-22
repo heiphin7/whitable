@@ -2,6 +2,7 @@ package com.api.whitable.repository;
 
 import com.api.whitable.model.Booking;
 import com.api.whitable.model.Restaurant;
+import com.api.whitable.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,5 +21,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("endTime") LocalDateTime endTime
     );
 
+    @Query("SELECT b FROM Booking b " +
+            "WHERE b.restaurant.id = :restaurantId " +
+            "AND b.startTime BETWEEN :start AND :end")
+    List<Booking> findBookingsByRestaurantAndStartTimeBetween(@Param("restaurantId") Long restaurantId,
+                                                              @Param("start") LocalDateTime start,
+                                                              @Param("end") LocalDateTime end);
+
     List<Booking> findAllByUserId(Long userId);
+
+    List<Booking> findByUserIdAndRestaurantIdAndBookingStatus(Long userId, Long restaurantId, Status bookingStatus);
 }
