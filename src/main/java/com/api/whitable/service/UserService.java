@@ -67,4 +67,8 @@ public class UserService {
         jwtTokenService.generateTokens(request, response, dto); // генерация и сохранение refresh
         return jwtTokenService.generateAccessToken(dto.getEmail());
     }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
 }

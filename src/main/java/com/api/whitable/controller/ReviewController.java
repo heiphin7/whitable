@@ -2,6 +2,7 @@ package com.api.whitable.controller;
 
 import com.api.whitable.dto.ReviewDto;
 import com.api.whitable.service.JwtTokenService;
+import com.api.whitable.service.ReviewLikeService;
 import com.api.whitable.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,4 @@ public class ReviewController {
         // todo потом сам сделаю, пока не трогай это
         return "redirect:/";
     }
-
 }

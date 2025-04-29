@@ -5,10 +5,9 @@ import com.api.whitable.dto.CreateRestaurantDto;
 import com.api.whitable.model.Amenity;
 import com.api.whitable.model.Restaurant;
 import com.api.whitable.model.Review;
-import com.api.whitable.service.BookingService;
-import com.api.whitable.service.JwtTokenService;
-import com.api.whitable.service.RestaurantService;
-import com.api.whitable.service.ReviewService;
+import com.api.whitable.model.User;
+import com.api.whitable.repository.ReviewLikeRepository;
+import com.api.whitable.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,17 +36,27 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
     private final BookingService bookingService;
     private final JwtTokenService jwtTokenService;
+    private final ReviewLikeRepository likeRepo;
+    private final UserService userService;
+    private final ReviewLikeService reviewLikeService;
 
     @GetMapping("/{restaurantId}")
     public String getRestaurantPage(@PathVariable("restaurantId") Long restaurantId, Model model,
                                     @RequestParam(value = "startDate", required = false) String startDate,
                                     HttpServletRequest request) {
         Long userId = jwtTokenService.getUserIdFromToken(request);
+        User currentUser = userService.findById(userId);
         Restaurant restaurant = restaurantService.findById(restaurantId).orElse(null);
         List<Review> restaurantReviews = reviewService.getRestaurantReviews(restaurantId);
         List<String> amenities = new ArrayList<>();
         LocalDate start = (startDate != null) ? LocalDate.parse(startDate) : LocalDate.now().plusDays(1);
         Map<String, Map<String, Integer>> bookings = bookingService.getBookingsMapForRestaurant(restaurantId, start);
+
+        Map<Long, Long> helpfulCounts = restaurantReviews.stream()
+                .collect(Collectors.toMap(
+                        Review::getId,
+                        reviewLikeService::countByReview  // long countByReview(Review review)
+                ));
 
         for(Amenity a: restaurant.getAmenities()) {
             amenities.add(a.getName());
@@ -68,8 +78,14 @@ public class RestaurantController {
         model.addAttribute("bookings", bookings);
         model.addAttribute("capacity", restaurant.getCapacityForHour());
         model.addAttribute("canReview", bookingService.canLeaveReview(userId, restaurantId));
+        model.addAttribute("helpfulCounts", helpfulCounts);
+        model.addAttribute("userId", userId);
 
-        log.info("can review: " + bookingService.canLeaveReview(userId, restaurantId));
+        model.addAttribute("likedReviews",
+                likeRepo.findAllByUser(currentUser)          // List<ReviewLike>
+                        .stream().map(l -> l.getReview().getId())
+                        .collect(Collectors.toSet()));      // Set<Long>
+
         return "restaurant-profile";
     }
 

@@ -5,30 +5,36 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
-@Table(name = "reviews")
 @Entity
+@Table(name = "reviews")
+@Data
 public class Review {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Связь с пользователем
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Связь с рестораном
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id")
+    @ManyToOne @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
     private String title;
     private Integer rating;
     private String content;
     private LocalDate createdAt;
-    private Integer helpfulCount; // Типа лайки
-}
 
+    /** Ленивая коллекция лайков */
+    @OneToMany(mappedBy = "review",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private Set<ReviewLike> likes = new HashSet<>();
+
+    public int getHelpfulCount() {
+        return likes.size();
+    }
+}

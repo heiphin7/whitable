@@ -146,110 +146,167 @@
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="text-2xl font-semibold">Отзывы</h2>
 
-                        <div th:if="${canReview}">
-                            <button id="openReviewModal" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                                + Оставить отзыв
-                            </button>
+                        <div th:if="${canReview && !#lists.isEmpty(reviews)}">
+                            <button class="openReviewModal …">+ Оставить отзыв</button>
                         </div>
                     </div>
 
-                    <!-- Общие оценки -->
-                    <div class="mb-8">
-                        <div class="flex items-center mb-2">
-                            <!-- Звёзды -->
-                            <span th:each="i : ${#numbers.sequence(1,5)}">
-                                <svg class="w-5 h-5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="currentColor" viewBox="0 0 22 20"
-                                     th:classappend="${i <= T(java.lang.Math).floor(restaurant.rating)} ? 'text-yellow-300' :
-                                                     (${i - 1 < restaurant.rating} ? 'text-yellow-300 opacity-50' : 'text-gray-300 dark:text-gray-500')">
-                                    <path
-                                            d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534
-                                           1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535
-                                           1.535 0 0 0 1.463 9.2l3.656 3.563-.863
-                                           5.031a1.532 1.532 0 0 0 2.226
-                                           1.616L11 17.033l4.518 2.375a1.534
-                                           1.534 0 0 0 2.226-1.617l-.863-5.03L20.537
-                                           9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                </svg>
-                            </span>
+                    <!-- Блок «Нет отзывов» -->
+                    <th:block th:if="${#lists.isEmpty(reviews)}">
+                        <div
+                                class="flex flex-col items-center justify-center py-16 bg-gray-50 dark:bg-gray-700
+             rounded-lg border border-gray-200 dark:border-gray-600"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-12 w-12 text-gray-400 mb-4"
+                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M8 10h.01M12 10h.01M16 10h.01
+                 M21 12c0 3.866-3.582 7-8 7
+                 -1.075 0-2.111-.194-3.083-.547
+                 L3 21l1.547-6.917A8.009 8.009 0 0 1 3 12
+                 c0-3.866 3.582-7 8-7s8 3.134 8 7z"/>
+                            </svg>
+                            <h3 class="mt-4 text-xl font-semibold text-gray-800 dark:text-gray-100">
+                                Пока нет отзывов
+                            </h3>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                Станьте первым, кто оставит отзыв об этом ресторане.
+                            </p>
 
-                            <!-- Цифровой рейтинг + подпись -->
-                            <div class="flex items-center text-base font-semibold text-gray-600 dark:text-gray-300 ms-3" style="margin-left: 10px">
-                                <span th:text="${restaurant.getRating()}">4.95</span>
-                                <span class="mx-1">из</span>
-                                <span>5</span>
+                            <div th:if="${canReview}">
+                                <button
+                                        class="openReviewModal mt-4 inline-flex items-center px-4 py-2
+                 bg-blue-600 text-white text-sm font-medium rounded-lg
+                 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="h-5 w-5 me-2"
+                                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    Оставить отзыв
+                                </button>
                             </div>
                         </div>
+                    </th:block>
 
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                            Всего отзывов: <span th:text="${restaurant.getRatingCount()}">1234</span>
-                        </p>
-                    </div>
+                    <!-- Список отзывов (если они есть) -->
+                    <th:block th:unless="${#lists.isEmpty(reviews)}">
+                        <!-- Общие оценки -->
+                        <div class="mb-8">
+                            <div class="flex items-center mb-2">
+                                <!-- Звёзды -->
+                                <span th:each="i : ${#numbers.sequence(1,5)}">
+                                    <svg class="w-5 h-5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                         fill="currentColor" viewBox="0 0 22 20"
+                                         th:classappend="${i <= T(java.lang.Math).floor(restaurant.rating)} ? 'text-yellow-300' :
+                                                         (${i - 1 < restaurant.rating} ? 'text-yellow-300 opacity-50' : 'text-gray-300 dark:text-gray-500')">
+                                        <path
+                                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534
+                                               1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535
+                                               1.535 0 0 0 1.463 9.2l3.656 3.563-.863
+                                               5.031a1.532 1.532 0 0 0 2.226
+                                               1.616L11 17.033l4.518 2.375a1.534
+                                               1.534 0 0 0 2.226-1.617l-.863-5.03L20.537
+                                               9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                    </svg>
+                                </span>
 
-                    <article th:each="review : ${reviews}" class="mb-8">
-                        <div class="flex items-center mb-4">
-                            <img class="w-10 h-10 me-4 rounded-full" src="/img/user.png" alt="User avatar">
-                            <div class="font-medium dark:text-white">
-                                <p th:text="${review.getUser().getUsername()}">
-                                    Имя пользователя
-                                    <time th:text="'Reviewed on ' + ${#temporals.format(review.createdAt, 'MMMM yyyy')}"
-                                          class="block text-sm text-gray-500 dark:text-gray-400">
-                                        Reviewed on August 2014
+                                <!-- Цифровой рейтинг + подпись -->
+                                <div class="flex items-center text-base font-semibold text-gray-600 dark:text-gray-300 ms-3" style="margin-left: 10px">
+                                    <span th:text="${restaurant.getRating()}">4.95</span>
+                                    <span class="mx-1">из</span>
+                                    <span>5</span>
+                                </div>
+                            </div>
+
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                Всего отзывов: <span th:text="${restaurant.getRatingCount()}">1234</span>
+                            </p>
+                        </div>
+
+                        <article th:each="review : ${reviews}" class="mb-8">
+                            <div class="flex items-center mb-4">
+                                <img class="w-10 h-10 me-4 rounded-full" src="/img/user.png" alt="User avatar">
+                                <div class="font-medium dark:text-white">
+                                    <p th:text="${review.getUser().getUsername()}">
+                                        Имя пользователя
+                                        <time th:text="'Reviewed on ' + ${#temporals.format(review.createdAt, 'MMMM yyyy')}"
+                                              class="block text-sm text-gray-500 dark:text-gray-400">
+                                            Reviewed on August 2014
+                                        </time>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center mb-1 space-x-1 rtl:space-x-reverse">
+                                <!-- Отображение звёздочек -->
+                                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <svg th:classappend="${i <= review.rating} ? 'text-yellow-300' : 'text-gray-300 dark:text-gray-500'"
+                                         class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                         fill="currentColor" viewBox="0 0 22 20">
+                                        <path
+                                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534
+                                               1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535
+                                               1.535 0 0 0 1.463 9.2l3.656 3.563-.863
+                                               5.031a1.532 1.532 0 0 0 2.226
+                                               1.616L11 17.033l4.518 2.375a1.534
+                                               1.534 0 0 0 2.226-1.617l-.863-5.03L20.537
+                                               9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                    </svg>
+                                </span>
+                                <h3 class="ms-2 text-sm font-semibold text-gray-900 dark:text-white"
+                                    th:text="${review.title}">
+                                    Title
+                                </h3>
+                            </div>
+
+                            <footer class="mb-5 text-sm text-gray-500 dark:text-gray-400">
+                                <p>Отзыв оставлен:
+                                    <time th:text="${#temporals.format(review.createdAt, 'd MMMM yyyy', T(java.util.Locale).forLanguageTag('ru'))}">
+                                        12 апреля 2025
                                     </time>
                                 </p>
-                            </div>
-                        </div>
+                            </footer>
 
-                        <div class="flex items-center mb-1 space-x-1 rtl:space-x-reverse">
-                            <!-- Отображение звёздочек -->
-                            <span th:each="i : ${#numbers.sequence(1, 5)}">
-                                <svg th:classappend="${i <= review.rating} ? 'text-yellow-300' : 'text-gray-300 dark:text-gray-500'"
-                                     class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="currentColor" viewBox="0 0 22 20">
-                                    <path
-                                            d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534
-                                           1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535
-                                           1.535 0 0 0 1.463 9.2l3.656 3.563-.863
-                                           5.031a1.532 1.532 0 0 0 2.226
-                                           1.616L11 17.033l4.518 2.375a1.534
-                                           1.534 0 0 0 2.226-1.617l-.863-5.03L20.537
-                                           9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                </svg>
-                            </span>
-                            <h3 class="ms-2 text-sm font-semibold text-gray-900 dark:text-white"
-                                th:text="${review.title}">
-                                Title
-                            </h3>
-                        </div>
-
-                        <footer class="mb-5 text-sm text-gray-500 dark:text-gray-400">
-                            <p>Отзыв оставлен:
-                                <time th:text="${#temporals.format(review.createdAt, 'd MMMM yyyy', T(java.util.Locale).forLanguageTag('ru'))}">
-                                    12 апреля 2025
-                                </time>
+                            <p class="mb-2 text-gray-500 dark:text-gray-400" th:text="${review.content}">
+                                Основной текст отзыва
                             </p>
-                        </footer>
 
-                        <p class="mb-2 text-gray-500 dark:text-gray-400" th:text="${review.content}">
-                            Основной текст отзыва
-                        </p>
+                            <!-- Лайк -->
+                            <aside>
+                                <p class="helpful-text text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                    <span th:text="${helpfulCounts[review.id]}">0</span> человек посчитали отзыв полезным!
+                                </p>
 
-                        <aside>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400"
-                               th:text="${review.helpfulCount + ' человек посчитали отзыв полезным!'}">
-                                19 people found this helpful
-                            </p>
-                            <div class="flex items-center mt-3">
-                                <a href="#"
-                                   class="px-2 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg
-                      border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4
-                      focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400
-                      dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                    Полезно
-                                </a>
-                            </div>
-                        </aside>
-                    </article>
+                                <button
+                                        type="button"
+                                        th:if="${review.user.id != userId}"
+                                        class="like-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg
+                                           border border-blue-600 bg-white text-blue-600
+                                           hover:bg-blue-50 hover:text-blue-700
+                                           focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-300
+                                           transition"
+                                                                        th:data-review="${review.id}"
+                                                                        th:classappend="${likedReviews.contains(review.id)
+                                        ? ' bg-blue-600 text-white border-blue-600 hover:bg-blue-700 hover:text-white'
+                                        : ''}"
+                                        th:disabled="${review.user.id == userId}"
+                                        th:title="${review.user.id == userId} ? 'Нельзя отметить свой же отзыв' : null"
+                                        aria-live="polite">
+                                    <!-- спиннер -->
+                                    <svg class="spinner hidden w-4 h-4 mr-2 animate-spin" viewBox="0 0 24 24" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="4"/>
+                                    </svg>
+                                    <!-- текст -->
+                                    <span th:text="${likedReviews.contains(review.id) ? 'Убрать' : 'Полезно'}">Полезно</span>
+                                </button>
+
+                            </aside>
+                        </article>
+                    </th:block>
                 </div>
             </section>
         </section>
@@ -603,6 +660,78 @@
                 event.preventDefault();
             }
         });
+
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', async e => {
+                e.preventDefault();
+                if (btn.disabled) return;
+
+                const reviewId   = btn.dataset.review;
+                const article    = btn.closest('article');
+                const helpfulTxt = article.querySelector('.helpful-text span');
+                const spinner    = btn.querySelector('.spinner');
+                const label      = btn.querySelector('span:not(.spinner)');
+
+                btn.disabled = true;
+                spinner.classList.remove('hidden');
+                label.classList.add('opacity-0');
+
+                try {
+                    const jwt = localStorage.getItem('jwtToken');
+                    const resp = await fetch(`/api/reviews/${reviewId}/helpful`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...(jwt ? { 'Authorization': `Bearer ${jwt}` } : {})
+                        }
+                    });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const { liked, helpfulCount } = await resp.json();
+
+                    helpfulTxt.textContent = helpfulCount;
+
+                    // Удаляем **обе** группы утилит-классов, независимо от исходного состояния
+                    btn.classList.remove(
+                        // default state
+                        'bg-white','text-blue-600','border-blue-600',
+                        'hover:bg-blue-50','hover:text-blue-700',
+                        // liked state
+                        'bg-blue-600','text-white','hover:bg-blue-700','hover:text-white'
+                    );
+
+                    if (liked) {
+                        // ставим «Убрать»
+                        btn.classList.add(
+                            'bg-blue-600','text-white','border-blue-600',
+                            'hover:bg-blue-700','hover:text-white'
+                        );
+                        label.textContent = 'Убрать';
+                    } else {
+                        // возвращаем «Полезно»
+                        btn.classList.add(
+                            'bg-white','text-blue-600','border-blue-600',
+                            'hover:bg-blue-50','hover:text-blue-700'
+                        );
+                        label.textContent = 'Полезно';
+                    }
+
+                } catch (err) {
+                    console.error('Ошибка лайка:', err);
+                    alert('Не удалось отправить отметку «Полезно». Попробуйте ещё раз.');
+                } finally {
+                    spinner.classList.add('hidden');
+                    label.classList.remove('opacity-0');
+                    btn.disabled = false;
+                }
+            });
+        });
+
+        // вместо document.getElementById("openReviewModal")…
+        document.querySelectorAll('.openReviewModal').forEach(btn =>
+            btn.addEventListener('click', () => {
+                document.getElementById('reviewModal').classList.remove('hidden');
+            })
+        );
     });
     /*]]>*/
 </script>

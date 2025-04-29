@@ -47,7 +47,6 @@ public class ReviewService {
         reviewToSave.setRating(dto.getRating());
         reviewToSave.setRestaurant(restaurant);
         reviewToSave.setContent(dto.getContent());
-        reviewToSave.setHelpfulCount(0); // при инициализации 0 как обычно
 
         restaurantRepository.save(restaurant);
         reviewRepository.save(reviewToSave);
