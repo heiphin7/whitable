@@ -1,5 +1,6 @@
 package com.api.whitable.controller;
 
+import com.api.whitable.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AdminController {
 
+    private final UserService userService;
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/dashboard")
     public String getAdminDashboardPage() {
@@ -21,5 +24,17 @@ public class AdminController {
     @GetMapping("/users")
     public String getAdminUsersPage() {
         return "admin-users";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/bookings")
+    public String getAdminBookingsPage() {
+        return "admin-bookings";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/restaurants")
+    public String getAdminRestaurantsPage() {
+        return "admin-restaurants";
     }
 }

@@ -2,7 +2,10 @@ package com.api.whitable.service;
 
 import com.api.whitable.dto.AuthDto;
 import com.api.whitable.dto.CreateUserDto;
+import com.api.whitable.dto.UserDto;
 import com.api.whitable.model.User;
+import com.api.whitable.repository.BookingRepository;
+import com.api.whitable.repository.ReviewRepository;
 import com.api.whitable.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,12 +14,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
+    private final ReviewRepository reviewRepository;
+    private final BookingRepository bookingRepository;
 
     public void save(CreateUserDto dto) throws IllegalArgumentException {
         if (dto == null) {
@@ -70,5 +78,25 @@ public class UserService {
 
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    public List<UserDto> getAllUserDto() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> userDtos = new ArrayList<>();
+
+        for (User user: users) {
+            UserDto userDto = new UserDto();
+            userDto.setId(user.getId());
+            userDto.setEmail(user.getEmail());
+            userDto.setUsername(user.getUsername());
+            userDto.setIsAdmin(user.getIsAdmin());
+
+            userDto.setReviewCount(reviewRepository.countByUserId(user.getId()));
+            userDto.setBookingCount(bookingRepository.countByUserId(user.getId()));
+
+            userDtos.add(userDto);
+        }
+
+        return userDtos;
     }
 }

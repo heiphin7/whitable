@@ -31,4 +31,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByUserId(Long userId);
 
     List<Booking> findByUserIdAndRestaurantIdAndBookingStatus(Long userId, Long restaurantId, Status bookingStatus);
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.user.id = :userId")
+    int countByUserId(@Param("userId") Long userId);
 }
