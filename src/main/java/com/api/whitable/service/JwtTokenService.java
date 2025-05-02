@@ -31,34 +31,33 @@ public class JwtTokenService {
     @Value("${jwt.refreshLifetime}")
     private Duration refreshLifetime;
     public void generateTokens(HttpServletRequest request, HttpServletResponse response, AuthDto dto) throws JwtException {
-        Map<String, Object> claims = new HashMap<>();
         Date issuedDate = new Date();
         Date accessExpirationDate = new Date(issuedDate.getTime() + accessLifetime.toMillis());
         Date refreshExpirationDate = new Date(issuedDate.getTime() + refreshLifetime.toMillis());
 
-        // Формируем access token
+        User user = userRepository.findByEmail(dto.getEmail());
+        if (user == null) {
+            throw new JwtException("Пользователь не найден");
+        }
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getIsAdmin() != null && user.getIsAdmin() ? "ROLE_ADMIN" : "ROLE_USER");
+
         String accessToken = Jwts.builder()
                 .setClaims(claims)
-                .setSubject(dto.getEmail())
+                .setSubject(user.getEmail())
                 .setIssuedAt(issuedDate)
                 .setExpiration(accessExpirationDate)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        // Формируем refresh token
         String refreshToken = Jwts.builder()
                 .setClaims(claims)
-                .setSubject(dto.getEmail())
+                .setSubject(user.getEmail())
                 .setIssuedAt(issuedDate)
                 .setExpiration(refreshExpirationDate)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-
-        // Проверяем, существует ли пользователь в БД
-        User user = userRepository.findByEmail(dto.getEmail());
-        if (user == null) {
-            throw new JwtException("Ошибка при создании JWT токена: пользователь не найден");
-        }
 
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
@@ -69,6 +68,28 @@ public class JwtTokenService {
         accessTokenCookie.setMaxAge(7 * 24 * 60 * 60);
         response.addCookie(accessTokenCookie);
     }
+
+    public String generateAccessToken(String username) {
+        User user = userRepository.findByEmail(username);
+        if (user == null) {
+            throw new IllegalArgumentException("Пользователь не найден");
+        }
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getIsAdmin() != null && user.getIsAdmin() ? "ROLE_ADMIN" : "ROLE_USER");
+
+        Date issuedDate = new Date();
+        Date expirationDate = new Date(issuedDate.getTime() + accessLifetime.toMillis());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(issuedDate)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
 
     public boolean validateToken(String jwt) {
         if (jwt == null) {
@@ -106,23 +127,6 @@ public class JwtTokenService {
         return user.getRefreshToken();
     }
 
-    /**
-     * Генерирует новый access token для пользователя (используется при рефреше).
-     */
-    public String generateAccessToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        Date issuedDate = new Date();
-        Date expirationDate = new Date(issuedDate.getTime() + accessLifetime.toMillis());
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(username)
-                .setIssuedAt(issuedDate)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-    }
-
     public String getJwtFromCookies(HttpServletRequest request) {
         if (request.getCookies() == null || request.getCookies().length == 0) {
             return null;
@@ -153,7 +157,7 @@ public class JwtTokenService {
         }
     }
 
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 

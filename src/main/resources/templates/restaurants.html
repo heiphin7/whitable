@@ -21,12 +21,12 @@
 </header>
 
 <main class="restaurants-container">
-    <aside class="filters-sidebar">
+    <aside class="filters-sidebar w-64 p-4 bg-white">
         <div class="filters-section">
             <h2>Filters</h2>
 
             <div class="filter-group">
-                <h3>Cuisine Type</h3>
+                <h3>Тип кухни</h3>
                 <div class="checkbox-group">
                     <label><input type="checkbox" name="cuisine" value="Итальянская"> Итальянская</label>
                     <label><input type="checkbox" name="cuisine" value="Японская"> Японская</label>
@@ -39,38 +39,38 @@
             </div>
 
             <div class="filter-group">
-                <h3>Price Range</h3>
+                <h3>Средний чек</h3>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="price" value="$"> $ (Under $30)</label>
-                    <label><input type="checkbox" name="price" value="$$"> $$ ($31-$60)</label>
-                    <label><input type="checkbox" name="price" value="$$$"> $$$ ($61-$100)</label>
-                    <label><input type="checkbox" name="price" value="$$$$"> $$$$ (Above $100)</label>
+                    <label><input type="checkbox" name="price" value="$"> $ (< 5000 KZT)</label>
+                    <label><input type="checkbox" name="price" value="$$"> $$ (< 8000 KZT)</label>
+                    <label><input type="checkbox" name="price" value="$$$"> $$$ (< 10000 KZT)</label>
+                    <label><input type="checkbox" name="price" value="$$$$"> $$$$ (> 10000 KZT)</label>
                 </div>
             </div>
 
             <div class="filter-group">
-                <h3>Rating</h3>
+                <h3>Рейтинг</h3>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="rating" value="5"> 5 Stars</label>
-                    <label><input type="checkbox" name="rating" value="4"> 4+ Stars</label>
-                    <label><input type="checkbox" name="rating" value="3"> 3+ Stars</label>
+                    <label><input type="checkbox" name="rating" value="5"> 5 Звёзд</label>
+                    <label><input type="checkbox" name="rating" value="4"> 4+ Звёзд</label>
+                    <label><input type="checkbox" name="rating" value="3"> 3+ Звёзд</label>
                 </div>
             </div>
 
             <div class="filter-group">
-                <h3>Features</h3>
+                <h3>Удобства</h3>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="features" value="Уличные Сиденья"> Уличные Сиденья</label>
-                    <label><input type="checkbox" name="features" value="Парковка"> Парковка</label>
-                    <label><input type="checkbox" name="features" value="Wi-Fi"> Wi-Fi</label>
-                    <label><input type="checkbox" name="features" value="Доставка"> Доставка</label>
-                    <label><input type="checkbox" name="features" value="Самовывоз"> Самовывоз</label>
+                    <label><input type="checkbox" name="features" value="outdoor"> Уличные Сиденья</label>
+                    <label><input type="checkbox" name="features" value="parking"> Парковка</label>
+                    <label><input type="checkbox" name="features" value="wifi"> Wi-Fi</label>
+                    <label><input type="checkbox" name="features" value="delivery"> Доставка</label>
+                    <label><input type="checkbox" name="features" value="takeout"> Самовывоз</label>
                 </div>
             </div>
         </div>
 
         <div class="sort-section">
-            <h2>Sort By</h2>
+            <h2>Сортировать</h2>
             <select id="sortSelect" class="sort-select">
                 <option value="rating-desc">Rating (High to Low)</option>
                 <option value="rating-asc">Rating (Low to High)</option>
@@ -84,8 +84,8 @@
 
     <section class="restaurants-list">
         <div class="restaurants-header">
-            <h1>Restaurants in New York</h1>
-            <p class="results-count">Showing <span id="restaurantCount">8</span> restaurants</p>
+            <h1>Рестораны в Астане</h1>
+            <p class="results-count">Найдено <span id="restaurantCount">8</span> ресторанов</p>
 
             <th:block th:if="${isAdmin}">
                 <!-- Кнопка "Плюс" для открытия модального окна -->

@@ -6,6 +6,7 @@ import com.api.whitable.service.RestaurantService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,4 +35,7 @@ public class MainController {
     public String restaurantProfile() {
         return "restaurant-profile";
     }
+
+    // TODO: При защищенных endpoint-ах указывать:
+    // @PreAuthorize("hasRole('ADMIN')")
 }

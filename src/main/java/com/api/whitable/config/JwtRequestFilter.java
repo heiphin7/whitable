@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -55,35 +58,26 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         try {
             if (accessToken != null && jwtTokenService.validateToken(accessToken)) {
-                // Если accessToken валиден
                 String username = jwtTokenService.getUsername(accessToken);
                 User user = userRepository.findByEmail(username);
+                String role = jwtTokenService.getAllClaimsFromToken(accessToken).get("role", String.class);
 
-                if (user != null) {
-                    setAuthentication(user, request);
-
-                    if (user.getIsAdmin() != null) {
-                        request.setAttribute("isAdmin", user.getIsAdmin());
-                    }
+                if (user != null && role != null) {
+                    setAuthentication(user, role, request);
                 }
 
             } else if (refreshToken != null && jwtTokenService.validateToken(refreshToken)) {
-                // Если accessToken истёк, но refreshToken валиден
                 String username = jwtTokenService.getUsername(refreshToken);
                 User user = userRepository.findByEmail(username);
 
                 if (user != null) {
-                    // Генерируем новый accessToken
                     String newAccessToken = jwtTokenService.generateAccessToken(username);
                     setAccessTokenInCookie(newAccessToken, response);
-                    setAuthentication(user, request);
-
-                    if (user.getIsAdmin() != null) {
-                        request.setAttribute("isAdmin", user.getIsAdmin());
-                    }
+                    String role = jwtTokenService.getAllClaimsFromToken(newAccessToken).get("role", String.class);
+                    setAuthentication(user, role, request);
                 }
-
-            } else {
+            }
+            else {
                 SecurityContextHolder.clearContext();
             }
         } catch (Exception e) {
@@ -93,13 +87,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthentication(User user, HttpServletRequest request) {
+    private void setAuthentication(User user, String role, HttpServletRequest request) {
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.getUsername(), null, null);
+                new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
+
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        request.setAttribute("isAdmin", user.getIsAdmin());
     }
 
     private void setAccessTokenInCookie(String newAccessToken, HttpServletResponse response) {

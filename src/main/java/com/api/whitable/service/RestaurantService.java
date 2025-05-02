@@ -140,6 +140,7 @@ public class RestaurantService {
             dtos.add(dto);
         }
 
+        System.out.println("Dtos: " + dtos.toString());
         return dtos;
     }
 

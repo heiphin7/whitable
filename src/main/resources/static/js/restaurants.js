@@ -1,100 +1,8 @@
-// TODO: Загрузки с базы данных
-// Sample restaurant data
-// Features: outdoor, parking, wifi, takeout, delivery
-
-// Изначальный список ресторанов
-const restaurants = [
-    {
-        id: 1,
-        name: "La Piazza Italiana",
-        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500",
-        description: "Authentic Italian cuisine in a warm, rustic atmosphere. Our handmade pasta and wood-fired pizzas will transport you straight to Italy.",
-        rating: 4.8,
-        price: "$$",
-        cuisine: "italian",
-        location: "Manhattan",
-        features: ["outdoor", "parking", "wifi"],
-    },
-    {
-        id: 2,
-        name: "Sakura Japanese",
-        image: "https://images.unsplash.com/photo-1502301103665-0b95cc738daf?w=500",
-        description: "Experience the finest Japanese cuisine with our expert sushi chefs and traditional dishes prepared with authentic ingredients.",
-        rating: 4.9,
-        price: "$$$",
-        cuisine: "japanese",
-        location: "Brooklyn",
-        features: ["delivery", "takeout"],
-    },
-    {
-        id: 3,
-        name: "Taj Mahal",
-        image: "https://images.unsplash.com/photo-1517244683847-7456b63c5969?w=500",
-        description: "Discover the rich flavors of India with our extensive menu of traditional curries, tandoori specialties, and fresh-baked naan.",
-        rating: 4.5,
-        price: "$$",
-        cuisine: "indian",
-        location: "Queens",
-        features: ["delivery", "takeout", "wifi"],
-    },
-    {
-        id: 4,
-        name: "El Mariachi",
-        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500",
-        description: "Authentic Mexican street food and traditional dishes served in a vibrant, colorful atmosphere with live mariachi music on weekends.",
-        rating: 4.3,
-        price: "$$",
-        cuisine: "mexican",
-        location: "Brooklyn",
-        features: ["outdoor", "delivery"],
-    },
-    {
-        id: 5,
-        name: "Le Petit Bistro",
-        image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=500",
-        description: "Classic French cuisine in an intimate setting. Our seasonal menu features traditional bistro favorites and an extensive wine list.",
-        rating: 4.7,
-        price: "$$$$",
-        cuisine: "french",
-        location: "Manhattan",
-        features: ["outdoor", "parking"],
-    },
-    {
-        id: 6,
-        name: "Sushi Master",
-        image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500",
-        description: "Premium sushi and sashimi prepared by master chefs, featuring daily fresh fish selections and innovative fusion rolls.",
-        rating: 4.6,
-        price: "$$$",
-        cuisine: "japanese",
-        location: "Manhattan",
-        features: ["takeout", "wifi"],
-    },
-    {
-        id: 7,
-        name: "Spice Route",
-        image: "https://images.unsplash.com/photo-1505253758473-96b7015fcd40?w=500",
-        description: "A culinary journey through India's diverse regions, offering both traditional favorites and contemporary interpretations.",
-        rating: 4.4,
-        price: "$$",
-        cuisine: "indian",
-        location: "Queens",
-        features: ["delivery", "takeout", "parking"],
-    },
-    {
-        id: 8,
-        name: "Trattoria Roma",
-        image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500",
-        description: "Family-style Italian dining featuring recipes passed down through generations, with an emphasis on fresh, local ingredients.",
-        rating: 4.2,
-        price: "$$",
-        cuisine: "italian",
-        location: "Brooklyn",
-        features: ["outdoor", "wifi"],
-    }
-];
+// Изначальный список ресторанов (Пустой так как подгружаем динамически)
+const restaurants = [];
 
 const featureMapping = {
+    'Уличные сиденья': 'outdoor',
     'Парковка': 'parking',
     'Wi-Fi': 'wifi',
     'Доставка': 'delivery',
@@ -273,6 +181,25 @@ function renderRestaurants(restaurants) {
     restaurantGrid.innerHTML = '';
     restaurantCount.textContent = restaurants.length;
 
+    // Если по заданным фильтрам ничего не найдно, тогда рендерим блок not-found вместо просто пустого grid-а
+    if (restaurants.length === 0) {
+        restaurantGrid.innerHTML = `
+              <div
+                class="not-found col-span-full w-full flex flex-col items-center justify-center
+                       bg-gray-50 rounded-xl p-10 shadow-md transition-all" style="min-height: calc(100vh - 6rem); width: 1000px;">
+                <div class="flex items-center justify-center w-24 h-24 bg-blue-100 rounded-full mb-6">
+                  <i class="fas fa-utensils text-5xl text-blue-500"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-700 mb-3">Рестораны не найдены</h2>
+                <p class="text-gray-500 text-lg text-center max-w-md">
+                  Попробуйте изменить фильтры или сбросить их, чтобы увидеть больше ресторанов.
+                </p>
+              </div>
+            `;
+        return;
+    }
+
+
     restaurants.forEach(restaurant => {
         const ratingClass = getRatingClass(restaurant.rating);
 
@@ -327,10 +254,10 @@ function getFeatureIcon(feature) {
 // Helper function to format feature name
 function formatFeatureName(feature) {
     const names = {
-        outdoor: 'Outdoor',
-        delivery: 'Delivery',
-        takeout: 'Takeout',
-        parking: 'Parking',
+        outdoor: 'Уличные сиденья',
+        delivery: 'Доставка',
+        takeout: 'Самовывоз',
+        parking: 'Парковка',
         wifi: 'WiFi'
     };
     return names[feature] || feature;
