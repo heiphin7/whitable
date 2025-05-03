@@ -1,5 +1,7 @@
 package com.api.whitable.controller;
 
+import com.api.whitable.service.BookingService;
+import com.api.whitable.service.ReviewService;
 import com.api.whitable.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
     private final UserService userService;
+    private final BookingService bookingService;
+    private final ReviewService reviewService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/dashboard")

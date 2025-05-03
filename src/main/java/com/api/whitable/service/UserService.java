@@ -1,6 +1,7 @@
 package com.api.whitable.service;
 
 import com.api.whitable.dto.AuthDto;
+import com.api.whitable.dto.ChangeUsernameEmailDto;
 import com.api.whitable.dto.CreateUserDto;
 import com.api.whitable.dto.UserDto;
 import com.api.whitable.model.User;
@@ -98,5 +99,29 @@ public class UserService {
         }
 
         return userDtos;
+    }
+
+    public void changeUsernameAndEmail(ChangeUsernameEmailDto dto) throws IllegalArgumentException {
+        User userToChange = userRepository.findById(dto.getId()).orElse(null);
+        System.out.println("Данные для изменения: " + dto);
+        System.out.println("Пользователь в базе данных: " + userToChange);
+
+        if (!userToChange.getUsername().equals(dto.getUsername())) {
+            User checkUsername = userRepository.findByUsername(dto.getUsername());
+            if (checkUsername != null) {
+                throw new IllegalArgumentException("Данное имя пользователя уже занято!");
+            }
+        }
+
+        if (!userToChange.getEmail().equals(dto.getEmail())) {
+            User checkEmail = userRepository.findByEmail(dto.getEmail());
+            if (checkEmail != null) {
+                throw new IllegalArgumentException("Данная почта уже занята!");
+            }
+        }
+
+        userToChange.setUsername((dto.getUsername()));
+        userToChange.setEmail(dto.getEmail());
+        userRepository.save(userToChange);
     }
 }

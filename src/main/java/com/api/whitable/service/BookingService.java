@@ -1,6 +1,7 @@
 package com.api.whitable.service;
 
 import com.api.whitable.dto.BookingDto;
+import com.api.whitable.dto.BookingInfoDto;
 import com.api.whitable.model.*;
 import com.api.whitable.repository.BookingRepository;
 import com.api.whitable.repository.RestaurantRepository;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -127,6 +129,55 @@ public class BookingService {
 
         // Можно оставить отзыв, если была завершённая бронь и отзыв ещё не оставляли
         return !alreadyLeftReview;
+    }
+
+    public List<BookingInfoDto> getAllBookingDtos() {
+        List<Booking> bookings = bookingRepository.findAll();
+        List<BookingInfoDto> dtos = new ArrayList<>();
+
+        for (Booking b: bookings) {
+            BookingInfoDto bookingDto = BookingInfoDto.builder()
+                    .id(b.getId())
+                    .guestCount(b.getGuestCount())
+                    .name(b.getUser().getUsername())
+                    .reservationTime(b.getStartTime())
+                    .restaurantName(b.getRestaurant().getName())
+                    .status(b.getBookingStatus().toString())
+                    .build();
+
+            dtos.add(bookingDto);
+        }
+
+        return dtos;
+    }
+
+    public void updateBookingStatus(String updatedStatus, Long bookingId) throws IllegalArgumentException {
+        Status status = null;
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+
+        if (booking == null) {
+            throw new IllegalArgumentException("Бронирование с указанным ID не найдено!");
+        }
+
+        switch (updatedStatus) {
+            case "PENDING":
+                status = Status.PENDING;
+                break;
+            case "CONFIRMED":
+                status = Status.CONFIRMED;
+                break;
+            case "CANCELED":
+                status = Status.CANCELED;
+                break;
+            case "COMPLETED":
+                status = Status.COMPLETED;
+                break;
+            default:
+                throw new IllegalArgumentException("Обновленного статуса не существует в базе данных!");
+        }
+
+        booking.setBookingStatus(status);
+        bookingRepository.save(booking);
     }
 
 }

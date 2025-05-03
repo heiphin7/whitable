@@ -61,52 +61,59 @@
   </header>
 
   <main class="flex-1 overflow-y-auto p-6">
-    <!-- Статистика -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
-      <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-indigo-100 p-3 rounded-full text-indigo-500">
-          <i class="fas fa-calendar-week"></i>
-        </div>
-        <p class="text-sm font-medium text-gray-500 uppercase">За последнюю неделю</p>
-        <p id="statWeek" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
-      </div>
-
-      <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-green-100 p-3 rounded-full text-green-500">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <p class="text-sm font-medium text-gray-500 uppercase">Всего бронирований</p>
-        <p id="statTotal" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
-      </div>
-
-      <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-yellow-100 p-3 rounded-full text-yellow-500">
-          <i class="fas fa-star"></i>
-        </div>
-        <p class="text-sm font-medium text-gray-500 uppercase">Всего отзывов</p>
-        <p id="statReviews" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
-      </div>
+    <div id="loading" class="flex items-center justify-center h-full">
+      <i class="fas fa-spinner fa-spin fa-3x text-gray-500"></i>
+      <span class="ml-4 text-lg text-gray-600">Пожалуйста, подождите...</span>
     </div>
 
-    <!-- Таблица бронирований -->
-    <section class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-700 mb-4">Список бронирований</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Имя</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Статус</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Гостей</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ресторан</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Время</th>
-          </tr>
-          </thead>
-          <tbody id="bookingTable" class="bg-white divide-y divide-gray-200"></tbody>
-        </table>
+    <div id="content" class="hidden">
+      <!-- Статистика -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-indigo-100 p-3 rounded-full text-indigo-500">
+            <i class="fas fa-calendar-week"></i>
+          </div>
+          <p class="text-sm font-medium text-gray-500 uppercase">За последнюю неделю</p>
+          <p id="statWeek" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-green-100 p-3 rounded-full text-green-500">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <p class="text-sm font-medium text-gray-500 uppercase">Всего бронирований</p>
+          <p id="statTotal" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-yellow-100 p-3 rounded-full text-yellow-500">
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="text-sm font-medium text-gray-500 uppercase">Всего отзывов</p>
+          <p id="statReviews" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
+        </div>
       </div>
-    </section>
+
+      <!-- Таблица бронирований -->
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Список бронирований</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Имя</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Статус</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Гостей</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ресторан</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Время</th>
+            </tr>
+            </thead>
+            <tbody id="bookingTable" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </main>
 </div>
 
@@ -134,101 +141,149 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.getElementById('sidebar');
-    const btnOpen = document.getElementById('menu-open');
-    const btnClose = document.getElementById('menu-close');
-
-    btnOpen?.addEventListener('click', () => {
-      sidebar.classList.remove('-translate-x-full');
-      sidebar.classList.add('translate-x-0');
-      btnOpen.classList.add('hidden');
-      btnClose.classList.remove('hidden');
-      document.getElementById('mainContent').classList.add('ml-64');
-    });
-
-    btnClose?.addEventListener('click', () => {
-      sidebar.classList.remove('translate-x-0');
-      sidebar.classList.add('-translate-x-full');
-      btnClose.classList.add('hidden');
-      btnOpen.classList.remove('hidden');
-      document.getElementById('mainContent').classList.remove('ml-64');
-    });
-  });
-
-
-  const bookings = [
-    { id: 1, name: 'Иван', status: 'CONFIRMED', guests: 4, restaurant: 'Good Food', time: '2025-04-28 19:00', reviews: 1 },
-    { id: 2, name: 'Ольга', status: 'PENDING', guests: 2, restaurant: 'Pasta House', time: '2025-04-30 18:30', reviews: 0 },
-    { id: 3, name: 'Сергей', status: 'COMPLETED', guests: 5, restaurant: 'Sushi Place', time: '2025-04-22 20:00', reviews: 1 },
-    { id: 4, name: 'Анна', status: 'CANCELED', guests: 3, restaurant: 'Burger Town', time: '2025-04-25 17:45', reviews: 0 }
-  ];
-
-  function renderStats() {
-    document.getElementById('statTotal').textContent = bookings.length;
-    document.getElementById('statWeek').textContent = bookings.filter(b => new Date(b.time) > Date.now() - 7 * 24 * 60 * 60 * 1000).length;
-    document.getElementById('statReviews').textContent = bookings.reduce((sum, b) => sum + b.reviews, 0);
-  }
-
-  function renderTable() {
-    const tbody = document.getElementById('bookingTable');
-    tbody.innerHTML = '';
-    bookings.forEach(b => {
-      const row = document.createElement('tr');
-      row.className = 'hover:bg-gray-50 transition-colors';
-      row.innerHTML = `
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.id}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.name}</td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            <span data-id="${b.id}" class="status-btn cursor-pointer px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(b.status)}">
-              ${b.status}
-            </span>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.guests}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.restaurant}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.time}</td>
-        `;
-      tbody.appendChild(row);
-    });
-  }
-
+  // Функция для цвета статуса
   function getStatusColor(status) {
     switch (status) {
       case 'CONFIRMED': return 'bg-green-100 text-green-800';
-      case 'PENDING': return 'bg-yellow-100 text-yellow-800';
-      case 'CANCELED': return 'bg-red-100 text-red-800';
+      case 'PENDING':   return 'bg-yellow-100 text-yellow-800';
+      case 'CANCELED':  return 'bg-red-100 text-red-800';
       case 'COMPLETED': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-600';
+      default:          return 'bg-gray-100 text-gray-600';
     }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    renderStats();
-    renderTable();
+    const loading      = document.getElementById('loading');
+    const content      = document.getElementById('content');
+    const statWeek     = document.getElementById('statWeek');
+    const statTotal    = document.getElementById('statTotal');
+    const statReviews  = document.getElementById('statReviews');
+    const tbody        = document.getElementById('bookingTable');
+    const sidebar      = document.getElementById('sidebar');
+    const btnOpen      = document.getElementById('menu-open');
+    const btnClose     = document.getElementById('menu-close');
+    let bookingsCache  = [];
 
+    // 1) Показываем спиннер, прячем контент
+    loading.classList.remove('hidden');
+    content.classList.add('hidden');
+
+    // 2) Запрашиваем данные
+    fetch('/api/bookings', { credentials: 'include' })
+            .then(res => {
+              if (!res.ok) throw new Error(res.statusText);
+              return res.json();
+            })
+            .then(bookings => {
+              bookingsCache = bookings;
+
+              // 3) Скрываем спиннер, показываем контент
+              loading.classList.add('hidden');
+              content.classList.remove('hidden');
+
+              const now = Date.now();
+              // Статистика
+              statTotal.textContent = bookingsCache.length;
+              statWeek.textContent  = bookingsCache.filter(b =>
+                      new Date(b.reservationTime).getTime() > now - 7*24*60*60*1000
+              ).length;
+              // Если у вас есть поле reviewCount у BookingInfoDto — замените ниже:
+              statReviews.textContent = bookingsCache.reduce((sum, b) => sum + (b.reviewCount || 0), 0);
+
+              // 4) Рендерим таблицу
+              tbody.innerHTML = '';
+              bookingsCache.forEach(b => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors';
+                row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.id}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.name}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span data-id="${b.id}"
+                class="status-btn cursor-pointer px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(b.status)}">
+                ${b.status}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.guestCount}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.restaurantName}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700">
+              ${new Date(b.reservationTime).toLocaleString()}
+            </td>
+          `;
+                tbody.appendChild(row);
+              });
+            })
+            .catch(err => {
+              loading.innerHTML = `<span class="text-red-600">Ошибка загрузки: ${err.message}</span>`;
+            });
+
+    // 5) Открытие/закрытие сайдбара
+    btnOpen?.addEventListener('click', () => {
+      sidebar.classList.replace('-translate-x-full','translate-x-0');
+      btnOpen.classList.add('hidden');
+      btnClose.classList.remove('hidden');
+      document.getElementById('mainContent').classList.add('ml-64');
+    });
+    btnClose?.addEventListener('click', () => {
+      sidebar.classList.replace('translate-x-0','-translate-x-full');
+      btnClose.classList.add('hidden');
+      btnOpen.classList.remove('hidden');
+      document.getElementById('mainContent').classList.remove('ml-64');
+    });
+
+    // 6) Обработчик клика по статусу (открывает модалку)
     document.getElementById('bookingTable').addEventListener('click', e => {
       const target = e.target.closest('.status-btn');
       if (!target) return;
       const id = target.dataset.id;
-      const booking = bookings.find(b => b.id == id);
+      const booking = bookingsCache.find(b => b.id == id);
       document.getElementById('statusBookingId').value = booking.id;
       document.getElementById('newStatus').value = booking.status;
       document.getElementById('statusModal').classList.remove('hidden');
     });
 
+    // 7) Закрыть модалку без сохранения
     document.getElementById('cancelStatusBtn').addEventListener('click', () => {
       document.getElementById('statusModal').classList.add('hidden');
     });
 
+    // 8) Сохранение нового статуса
     document.getElementById('statusForm').addEventListener('submit', e => {
       e.preventDefault();
-      const id = parseInt(document.getElementById('statusBookingId').value);
+      const id = +document.getElementById('statusBookingId').value;
       const newStatus = document.getElementById('newStatus').value;
-      const booking = bookings.find(b => b.id === id);
-      booking.status = newStatus;
-      renderStats();
-      renderTable();
-      document.getElementById('statusModal').classList.add('hidden');
+
+      fetch(`/api/bookings/${id}/status`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ status: newStatus })
+      })
+              .then(res => {
+                if (!res.ok) throw new Error(res.statusText);
+                return res.json();
+              })
+              .then(() => {
+                document.getElementById('statusModal').classList.add('hidden');
+                // просто перерендерим таблицу заново
+                bookingsCache.find(b => b.id === id).status = newStatus;
+                // обновляем stats + table
+                document.getElementById('statTotal').textContent = bookingsCache.length;
+                document.getElementById('statWeek').textContent  =
+                        bookingsCache.filter(b =>
+                                new Date(b.reservationTime).getTime() > Date.now() - 7*24*60*60*1000
+                        ).length;
+                document.getElementById('statReviews').textContent =
+                        bookingsCache.reduce((sum, b) => sum + (b.reviewCount||0),0);
+                // обновляем строки
+                document.querySelectorAll(`.status-btn[data-id="${id}"]`).forEach(el => {
+                  el.textContent = newStatus;
+                  el.className = `status-btn cursor-pointer px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(newStatus)}`;
+                });
+              })
+              .catch(err => {
+                alert('Ошибка: ' + err.message);
+              });
     });
   });
 </script>
