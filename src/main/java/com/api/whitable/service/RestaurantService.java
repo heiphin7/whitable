@@ -2,12 +2,14 @@ package com.api.whitable.service;
 
 import com.api.whitable.dto.CreateRestaurantDto;
 import com.api.whitable.dto.RestaurantDto;
+import com.api.whitable.dto.RestaurantInfoDto;
 import com.api.whitable.model.Amenity;
 import com.api.whitable.model.CuisineType;
 import com.api.whitable.model.Restaurant;
 import com.api.whitable.repository.AmenityRepository;
 import com.api.whitable.repository.CuisineTypeRepository;
 import com.api.whitable.repository.RestaurantRepository;
+import com.api.whitable.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ import java.util.*;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final AmenityRepository amenityRepository;
+    private final ReviewRepository reviewRepository;
     private final CuisineTypeRepository cuisineTypeRepository;
 
     @Transactional
@@ -124,8 +127,6 @@ public class RestaurantService {
                 price = "N/A"; // Если средний чек не указан
             }
 
-            System.out.println("Price: " + price);
-
             List<String> features = new ArrayList<>();
             for (Amenity a: r.getAmenities()) {
                 features.add(a.getName());
@@ -140,8 +141,54 @@ public class RestaurantService {
             dtos.add(dto);
         }
 
-        System.out.println("Dtos: " + dtos.toString());
         return dtos;
+    }
+
+    public List<RestaurantInfoDto> getAllRestaurants() {
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<RestaurantInfoDto> dtos = new ArrayList<>();
+
+        for (Restaurant r: restaurants) {
+            RestaurantInfoDto dto = RestaurantInfoDto.builder()
+                    .id(r.getId())
+                    .url(r.getUrlToRestaurants())
+                    .address(r.getAddress())
+                    .name(r.getName())
+                    .cuisineType(r.getCuisineType())
+                    .phoneNumber(r.getPhoneNumber())
+                    .reviewCount(reviewRepository.countByRestaurant(r))
+                    .rating(r.getRating())
+                    .build();
+
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+
+    public void updateRestaurantInfo(RestaurantInfoDto dto, Long restaurantId) throws IllegalArgumentException {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+                () -> new IllegalArgumentException("Ресторан с указанным ID не найден!")
+        );
+
+        // Если название поменяли, смотрим - допустен ли он
+        if (!restaurant.getName().equals(dto.getName())) {
+            Restaurant checkName = restaurantRepository.findByName(dto.getName()).orElse(null);
+
+            if (checkName != null) {
+                throw new IllegalArgumentException("Указанное имя для ресторана занято!");
+            }
+        }
+        CuisineType cuisineType = cuisineTypeRepository.findByName(dto.getCuisineType());
+
+        restaurant.setName(dto.getName());
+        restaurant.setDescription(dto.getDescription());
+        restaurant.setAddress(dto.getAddress());
+        restaurant.setPhoneNumber(dto.getPhoneNumber());
+        restaurant.setCuisineType(String.valueOf(cuisineType));
+        restaurant.setUrlToRestaurants(dto.getUrl());
+
+        restaurantRepository.save(restaurant);
     }
 
     public List<Restaurant> findAll() {

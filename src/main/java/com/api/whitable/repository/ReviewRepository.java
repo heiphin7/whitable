@@ -1,5 +1,6 @@
 package com.api.whitable.repository;
 
+import com.api.whitable.model.Restaurant;
 import com.api.whitable.model.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     boolean existsByUserIdAndRestaurantId(Long userId, Long restaurantId);
     @Query("SELECT COUNT(r) FROM Review r WHERE r.user.id = :userId")
     int countByUserId(@Param("userId") Long userId);
+    int countByRestaurant(Restaurant restaurant);
 }

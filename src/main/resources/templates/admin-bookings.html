@@ -248,42 +248,55 @@
     });
 
     // 8) Сохранение нового статуса
-    document.getElementById('statusForm').addEventListener('submit', e => {
+    // 8) Сохранение нового статуса бронирования через /api/bookings
+    document.getElementById('statusForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const id = +document.getElementById('statusBookingId').value;
-      const newStatus = document.getElementById('newStatus').value;
+      const saveBtn = e.target.querySelector('button[type="submit"]');
+      saveBtn.disabled = true;
 
-      fetch(`/api/bookings/${id}/status`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ status: newStatus })
-      })
-              .then(res => {
-                if (!res.ok) throw new Error(res.statusText);
-                return res.json();
-              })
-              .then(() => {
-                document.getElementById('statusModal').classList.add('hidden');
-                // просто перерендерим таблицу заново
-                bookingsCache.find(b => b.id === id).status = newStatus;
-                // обновляем stats + table
-                document.getElementById('statTotal').textContent = bookingsCache.length;
-                document.getElementById('statWeek').textContent  =
-                        bookingsCache.filter(b =>
-                                new Date(b.reservationTime).getTime() > Date.now() - 7*24*60*60*1000
-                        ).length;
-                document.getElementById('statReviews').textContent =
-                        bookingsCache.reduce((sum, b) => sum + (b.reviewCount||0),0);
-                // обновляем строки
-                document.querySelectorAll(`.status-btn[data-id="${id}"]`).forEach(el => {
-                  el.textContent = newStatus;
-                  el.className = `status-btn cursor-pointer px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(newStatus)}`;
+      const bookingId     = +document.getElementById('statusBookingId').value;
+      const updatedStatus = document.getElementById('newStatus').value;
+
+      try {
+        const res = await fetch('/api/bookings', {
+          method:      'PUT',
+          credentials: 'include',
+          headers:     { 'Content-Type': 'application/json' },
+          body:        JSON.stringify({
+            bookingId:     bookingId,
+            updatedStatus: updatedStatus
+          })
+        });
+
+        if (!res.ok) {
+          // если 400, сервер вернет текст ошибки
+          const msg = res.status === 400 ? await res.text() : res.statusText;
+          throw new Error(msg);
+        }
+
+        // скрываем модалку
+        document.getElementById('statusModal').classList.add('hidden');
+
+        // обновляем локальный кэш и UI
+        const booking = bookingsCache.find(b => b.id === bookingId);
+        booking.status = updatedStatus;
+
+        // обновляем цвет и текст всех элементов .status-btn[data-id="..."]
+        document
+                .querySelectorAll(`.status-btn[data-id="${bookingId}"]`)
+                .forEach(el => {
+                  el.textContent = updatedStatus;
+                  el.className = `status-btn cursor-pointer px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(updatedStatus)}`;
                 });
-              })
-              .catch(err => {
-                alert('Ошибка: ' + err.message);
-              });
+
+        // (опционально) обновляем статистику, если она зависит от статусов
+        // например:
+        // statReviews.textContent = bookingsCache.reduce(...);
+      } catch (err) {
+        alert('Ошибка: ' + err.message);
+      } finally {
+        saveBtn.disabled = false;
+      }
     });
   });
 </script>

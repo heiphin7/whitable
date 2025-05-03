@@ -18,6 +18,8 @@ public class AdminController {
     private final BookingService bookingService;
     private final ReviewService reviewService;
 
+    // TODO: Кароче нужно сделать чтобы карточки-статистики передавались либо через thymeleaf ну либо через подгрузку
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/dashboard")
     public String getAdminDashboardPage() {
