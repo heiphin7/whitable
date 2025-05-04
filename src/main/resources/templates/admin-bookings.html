@@ -74,7 +74,7 @@
             <i class="fas fa-calendar-week"></i>
           </div>
           <p class="text-sm font-medium text-gray-500 uppercase">За последнюю неделю</p>
-          <p id="statWeek" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
+          <p id="statWeek" class="mt-1 text-2xl font-semibold text-gray-800"  th:text="${lastWeekBookingsCount}">0</p>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
@@ -82,7 +82,7 @@
             <i class="fas fa-calendar-check"></i>
           </div>
           <p class="text-sm font-medium text-gray-500 uppercase">Всего бронирований</p>
-          <p id="statTotal" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
+          <p id="statTotal" class="mt-1 text-2xl font-semibold text-gray-800" th:text="${bookingsCount}">0</p>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
@@ -90,7 +90,7 @@
             <i class="fas fa-star"></i>
           </div>
           <p class="text-sm font-medium text-gray-500 uppercase">Всего отзывов</p>
-          <p id="statReviews" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
+          <p id="statReviews" class="mt-1 text-2xl font-semibold text-gray-800" th:text="${reviewsCount}">0</p>
         </div>
       </div>
 

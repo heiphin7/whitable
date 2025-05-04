@@ -1,5 +1,6 @@
 package com.api.whitable.repository;
 
+import com.api.whitable.dto.BookingData;
 import com.api.whitable.model.Booking;
 import com.api.whitable.model.Restaurant;
 import com.api.whitable.model.Status;
@@ -33,4 +34,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByUserIdAndRestaurantIdAndBookingStatus(Long userId, Long restaurantId, Status bookingStatus);
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.user.id = :userId")
     int countByUserId(@Param("userId") Long userId);
+
+    @Query("""
+        SELECT new com.api.whitable.dto.BookingData(
+           b.startTime,
+           COUNT(b)
+        )
+        FROM Booking b
+        WHERE b.startTime BETWEEN :from AND :to
+        GROUP BY b.startTime
+        ORDER BY b.startTime
+    """)
+    List<BookingData> countByDayBetween(
+            @Param("from") LocalDateTime from,
+            @Param("to")   LocalDateTime to
+    );
+
+    long countByStartTimeBetween(LocalDateTime from, LocalDateTime to);
 }

@@ -153,6 +153,7 @@ public class RestaurantService {
                     .id(r.getId())
                     .url(r.getUrlToRestaurants())
                     .address(r.getAddress())
+                    .description(r.getDescription())
                     .name(r.getName())
                     .cuisineType(r.getCuisineType())
                     .phoneNumber(r.getPhoneNumber())
@@ -185,7 +186,7 @@ public class RestaurantService {
         restaurant.setDescription(dto.getDescription());
         restaurant.setAddress(dto.getAddress());
         restaurant.setPhoneNumber(dto.getPhoneNumber());
-        restaurant.setCuisineType(String.valueOf(cuisineType));
+        restaurant.setCuisineType(cuisineType.getName());
         restaurant.setUrlToRestaurants(dto.getUrl());
 
         restaurantRepository.save(restaurant);
@@ -193,5 +194,9 @@ public class RestaurantService {
 
     public List<Restaurant> findAll() {
         return restaurantRepository.findAll();
+    }
+
+    public long getRestaurantsCount() {
+        return restaurantRepository.count();
     }
 }

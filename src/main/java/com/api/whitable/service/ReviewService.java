@@ -91,4 +91,8 @@ public class ReviewService {
         int newRatingCount = ratingCount - 1;
         return newTotalRating / newRatingCount;
     }
+
+    public long getReviewsCount() {
+        return reviewRepository.count();
+    }
 }

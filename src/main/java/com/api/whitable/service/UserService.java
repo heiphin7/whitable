@@ -124,4 +124,8 @@ public class UserService {
         userToChange.setEmail(dto.getEmail());
         userRepository.save(userToChange);
     }
+
+    public long getUsersCount() {
+        return userRepository.count();
+    }
 }

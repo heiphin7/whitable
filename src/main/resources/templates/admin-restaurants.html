@@ -61,54 +61,61 @@
   </header>
 
   <main class="flex-1 overflow-y-auto p-6">
-    <!-- Статистика -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
-      <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-blue-100 p-3 rounded-full text-blue-500">
-          <i class="fas fa-store"></i>
-        </div>
-        <p class="text-sm font-medium text-gray-500 uppercase">Ресторанов</p>
-        <p id="statTotalRestaurants" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
-      </div>
-      <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-yellow-100 p-3 rounded-full text-yellow-500">
-          <i class="fas fa-star"></i>
-        </div>
-        <p class="text-sm font-medium text-gray-500 uppercase">Отзывов</p>
-        <p id="statTotalReviews" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
-      </div>
-      <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-green-100 p-3 rounded-full text-green-500">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <p class="text-sm font-medium text-gray-500 uppercase">Бронирований</p>
-        <p id="statTotalBookings" class="mt-1 text-2xl font-semibold text-gray-800">0</p>
-      </div>
+    <div id="loading" class="flex items-center justify-center h-full">
+      <i class="fas fa-spinner fa-spin fa-3x text-gray-500"></i>
+      <span class="ml-4 text-lg text-gray-600">Пожалуйста, подождите...</span>
     </div>
 
-    <!-- Таблица ресторанов -->
-    <section class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-700 mb-4">Список ресторанов</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Название</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Описание</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Адрес</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Телефон</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Рейтинг</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Отзывы</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Кухня</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">URL</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-          </tr>
-          </thead>
-          <tbody id="restaurantTable" class="bg-white divide-y divide-gray-200"></tbody>
-        </table>
+    <div id="content" class="hidden">
+      <!-- Статистика -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-blue-100 p-3 rounded-full text-blue-500">
+            <i class="fas fa-store"></i>
+          </div>
+          <p class="text-sm font-medium text-gray-500 uppercase">Ресторанов</p>
+          <p id="statTotalRestaurants" class="mt-1 text-2xl font-semibold text-gray-800" th:text="${restaurantsCount}">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-yellow-100 p-3 rounded-full text-yellow-500">
+            <i class="fas fa-star"></i>
+          </div>
+          <p class="text-sm font-medium text-gray-500 uppercase">Отзывов</p>
+          <p id="statTotalReviews" class="mt-1 text-2xl font-semibold text-gray-800" th:text="${reviewsCount}">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-green-100 p-3 rounded-full text-green-500">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <p class="text-sm font-medium text-gray-500 uppercase">Бронирований</p>
+          <p id="statTotalBookings" class="mt-1 text-2xl font-semibold text-gray-800" th:text="${bookingsCount}">0</p>
+        </div>
       </div>
-    </section>
+
+      <!-- Таблица ресторанов -->
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Список ресторанов</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Название</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Описание</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Адрес</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Телефон</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Рейтинг</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Отзывы</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Кухня</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">URL</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="restaurantTable" class="bg-white divide-y divide-gray-200"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </main>
 </div>
 
@@ -158,102 +165,150 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.getElementById('sidebar');
-    const btnOpen = document.getElementById('menu-open');
-    const btnClose = document.getElementById('menu-close');
+  // функция для цвета статуса не понадобится тут
 
-    btnOpen?.addEventListener('click', () => {
-      sidebar.classList.remove('-translate-x-full');
-      sidebar.classList.add('translate-x-0');
-      btnOpen.classList.add('hidden');
-      btnClose.classList.remove('hidden');
-      document.getElementById('mainContent').classList.add('ml-64');
-    });
-
-    btnClose?.addEventListener('click', () => {
-      sidebar.classList.remove('translate-x-0');
-      sidebar.classList.add('-translate-x-full');
-      btnClose.classList.add('hidden');
-      btnOpen.classList.remove('hidden');
-      document.getElementById('mainContent').classList.remove('ml-64');
-    });
-  });
-
-
-  const restaurants = [
-    { id: 1, name: 'Good Food', description: 'Отличная еда и сервисОтличная еда и сервисОтличная еда и сервисОтличная еда и сервисОтличная еда и сервисОтличная еда и сервис', address: 'ул. Пушкина, д.1', phone: '+7 900 111-22-33', rating: 4.5, reviews: 12, cuisine: 'Итальянская', url: 'https://goodfood.ru', bookings: 5 },
-    { id: 2, name: 'Sushi Place', description: 'Японская кухня премиум-класса', address: 'пр. Ленина, д.15', phone: '+7 901 222-33-44', rating: 0, reviews: 0, cuisine: 'Японская', url: '', bookings: 3 },
-    { id: 3, name: 'Burger Town', description: 'Лучшие бургеры в городе', address: 'ул. Советская, д.25', phone: '+7 902 333-44-55', rating: 4.0, reviews: 8, cuisine: 'Американская', url: 'https://burgertown.com', bookings: 4 }
-  ];
-
-  function renderStats() {
-    document.getElementById('statTotalRestaurants').textContent = restaurants.length;
-    document.getElementById('statTotalReviews').textContent = restaurants.reduce((sum, r) => sum + r.reviews, 0);
-    document.getElementById('statTotalBookings').textContent = restaurants.reduce((sum, r) => sum + r.bookings, 0);
-  }
-
-  function renderTable() {
+  // Вынесем всё в функцию, чтобы можно было вызывать повторно после сохранения
+  async function loadRestaurants() {
+    const loading = document.getElementById('loading');
+    const content = document.getElementById('content');
+    const statTotal = document.getElementById('statTotalRestaurants');
+    const statReviews = document.getElementById('statTotalReviews');
+    const statBookings = document.getElementById('statTotalBookings');
     const tbody = document.getElementById('restaurantTable');
-    tbody.innerHTML = '';
-    restaurants.forEach(r => {
-      const tr = document.createElement('tr');
-      tr.className = 'hover:bg-gray-50 transition-colors';
-      tr.innerHTML = `
+    let restaurantsCache = [];
+
+    // 1) показываем спиннер, прячем контент
+    loading.classList.remove('hidden');
+    content.classList.add('hidden');
+
+    try {
+      // 2) запрашиваем данные
+      const res = await fetch('/api/restaurants', { credentials: 'include' });
+      if (!res.ok) throw new Error(res.statusText);
+      restaurantsCache = await res.json();
+
+      // 3) скрываем спиннер, показываем контент
+      loading.classList.add('hidden');
+      content.classList.remove('hidden');
+
+      // 4) обновляем статистику
+      statTotal.textContent   = restaurantsCache.length;
+      statReviews.textContent = restaurantsCache.reduce((sum, r) => sum + (r.reviewCount || 0), 0);
+      statBookings.textContent= restaurantsCache.reduce((sum, r) => sum + (r.bookingCount || 0), 0);
+
+      // 5) строим таблицу
+      tbody.innerHTML = '';
+      for (const r of restaurantsCache) {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50 transition-colors';
+        tr.innerHTML = `
           <td class="px-6 py-4 text-gray-700">${r.id}</td>
           <td class="px-6 py-4 text-gray-700">${r.name}</td>
           <td class="px-6 py-4 text-gray-700">${r.description}</td>
           <td class="px-6 py-4 text-gray-700">${r.address}</td>
-          <td class="px-6 py-4 text-gray-700">${r.phone}</td>
+          <td class="px-6 py-4 text-gray-700">${r.phoneNumber}</td>
           <td class="px-6 py-4 text-gray-700">${r.rating > 0 ? r.rating.toFixed(1) : 'N/A'}</td>
-          <td class="px-6 py-4 text-gray-700">${r.reviews > 0 ? r.reviews : 'N/A'}</td>
-          <td class="px-6 py-4 text-gray-700">${r.cuisine}</td>
-          <td class="px-6 py-4 text-gray-700">${r.url ? `<a href="${r.url}" target="_blank" class="text-blue-600 underline">Ссылка</a>` : 'N/A'}</td>
+          <td class="px-6 py-4 text-gray-700">${r.reviewCount > 0 ? r.reviewCount : 'N/A'}</td>
+          <td class="px-6 py-4 text-gray-700">${r.cuisineType}</td>
+          <td class="px-6 py-4 text-gray-700">
+            ${r.url ? `<a href="${r.url}" target="_blank" class="text-blue-600 underline">Ссылка</a>` : 'N/A'}
+          </td>
           <td class="px-6 py-4 text-gray-700">
             <button data-id="${r.id}" class="edit-btn text-indigo-600 hover:text-indigo-900">
               <i class="fas fa-edit"></i>
             </button>
           </td>
         `;
-      tbody.appendChild(tr);
-    });
+        tbody.appendChild(tr);
+      }
+
+      // прикручиваем открытие модалки к кнопкам «edit»
+      document.getElementById('restaurantTable').addEventListener('click', e => {
+        const btn = e.target.closest('.edit-btn');
+        if (!btn) return;
+        const id = +btn.dataset.id;
+        const r = restaurantsCache.find(x => x.id === id);
+        document.getElementById('editRestaurantId').value = r.id;
+        document.getElementById('editName').value = r.name;
+        document.getElementById('editDescription').value = r.description;
+        document.getElementById('editAddress').value = r.address;
+        document.getElementById('editPhone').value = r.phoneNumber;
+        document.getElementById('editCuisine').value = r.cuisineType;
+        document.getElementById('editUrl').value = r.url;
+        document.getElementById('editModal').classList.remove('hidden');
+      });
+    } catch (err) {
+      loading.innerHTML = `<span class="text-red-600">Ошибка загрузки: ${err.message}</span>`;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    renderStats();
-    renderTable();
+    // сначала грузим рестораны
+    loadRestaurants();
 
-    document.getElementById('restaurantTable').addEventListener('click', e => {
-      const btn = e.target.closest('.edit-btn');
-      if (!btn) return;
-      const id = btn.dataset.id;
-      const r = restaurants.find(r => r.id == id);
-      document.getElementById('editRestaurantId').value = r.id;
-      document.getElementById('editName').value = r.name;
-      document.getElementById('editDescription').value = r.description;
-      document.getElementById('editAddress').value = r.address;
-      document.getElementById('editPhone').value = r.phone;
-      document.getElementById('editCuisine').value = r.cuisine;
-      document.getElementById('editUrl').value = r.url;
-      document.getElementById('editModal').classList.remove('hidden');
+    // сайдбар
+    const sidebar = document.getElementById('sidebar');
+    const btnOpen = document.getElementById('menu-open');
+    const btnClose= document.getElementById('menu-close');
+    btnOpen?.addEventListener('click', () => {
+      sidebar.classList.replace('-translate-x-full','translate-x-0');
+      btnOpen.classList.add('hidden'); btnClose.classList.remove('hidden');
+      document.getElementById('mainContent').classList.add('ml-64');
+    });
+    btnClose?.addEventListener('click', () => {
+      sidebar.classList.replace('translate-x-0','-translate-x-full');
+      btnClose.classList.add('hidden'); btnOpen.classList.remove('hidden');
+      document.getElementById('mainContent').classList.remove('ml-64');
     });
 
+    // отмена модалки
     document.getElementById('cancelBtn').addEventListener('click', () => {
       document.getElementById('editModal').classList.add('hidden');
     });
 
-    document.getElementById('editForm').addEventListener('submit', e => {
+    // отправка изменений
+    document.getElementById('editForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const id = parseInt(document.getElementById('editRestaurantId').value);
-      const r = restaurants.find(r => r.id === id);
-      r.name = document.getElementById('editName').value;
-      r.description = document.getElementById('editDescription').value;
-      r.address = document.getElementById('editAddress').value;
-      r.phone = document.getElementById('editPhone').value;
-      r.cuisine = document.getElementById('editCuisine').value;
-      r.url = document.getElementById('editUrl').value;
-      renderTable();
-      document.getElementById('editModal').classList.add('hidden');
+      const saveBtn = e.target.querySelector('button[type="submit"]');
+      saveBtn.disabled = true;
+
+      // Собираем DTO из полей
+      const id = +document.getElementById('editRestaurantId').value;
+      const dto = {
+        id,
+        name:         document.getElementById('editName').value.trim(),
+        description:  document.getElementById('editDescription').value.trim(),
+        address:      document.getElementById('editAddress').value.trim(),
+        phoneNumber:  document.getElementById('editPhone').value.trim(),
+        cuisineType:  document.getElementById('editCuisine').value,
+        url:          document.getElementById('editUrl').value.trim()
+      };
+
+      try {
+        const res = await fetch(`/api/restaurants/${id}`, {
+          method:      'PUT',
+          credentials: 'include',
+          headers:     { 'Content-Type': 'application/json' },
+          body:        JSON.stringify(dto)
+        });
+
+        if (res.status === 400) {
+          // на 400 сервер вернёт plain text (сообщение об ошибке)
+          const errText = await res.text();
+          alert(errText);
+        } else if (!res.ok) {
+          // все прочие ошибки
+          throw new Error(res.statusText);
+        } else {
+          // успех
+          document.getElementById('editModal').classList.add('hidden');
+          await loadRestaurants();  // перезагружаем список
+        }
+      } catch (err) {
+        alert('Ошибка: ' + err.message);
+      } finally {
+        saveBtn.disabled = false;
+      }
     });
   });
 </script>

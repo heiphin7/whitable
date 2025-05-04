@@ -1,5 +1,6 @@
 package com.api.whitable.service;
 
+import com.api.whitable.dto.BookingData;
 import com.api.whitable.dto.BookingDto;
 import com.api.whitable.dto.BookingInfoDto;
 import com.api.whitable.model.*;
@@ -180,4 +181,19 @@ public class BookingService {
         bookingRepository.save(booking);
     }
 
+    public long getBookingsCount() {
+        return bookingRepository.count();
+    }
+
+    public List<BookingData> getBookingsData() {
+        LocalDateTime end   = LocalDateTime.now().with(LocalTime.MAX);
+        LocalDateTime start = end.minusDays(6).with(LocalTime.MIN);
+        return bookingRepository.countByDayBetween(start, end);
+    }
+
+    public long getLastWeekBookingsCount() {
+        LocalDateTime end   = LocalDateTime.now().with(LocalTime.MAX);
+        LocalDateTime start = end.minusDays(6).with(LocalTime.MIN);
+        return bookingRepository.countByStartTimeBetween(start, end);
+    }
 }

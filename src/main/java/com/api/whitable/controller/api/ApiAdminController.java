@@ -81,4 +81,10 @@ public class ApiAdminController {
             return new ResponseEntity<>("Server Error :(" , HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/bookings/data")
+    public ResponseEntity<?> getBookingsData() {
+        return ResponseEntity.ok(bookingService.getBookingsData());
+    }
 }
