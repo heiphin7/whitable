@@ -566,3 +566,12 @@ body {
     margin: 2rem auto; /* или другой отступ на ваш вкус */
     padding: 0 2rem;   /* при необходимости */
 }
+
+.loader {
+    border-top-color: #3490dc;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

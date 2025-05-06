@@ -199,4 +199,8 @@ public class RestaurantService {
     public long getRestaurantsCount() {
         return restaurantRepository.count();
     }
+
+    public List<Restaurant> getRelatedRestaurants(Long restaurantId) {
+        return restaurantRepository.findRandomRestaurantsExcludingId(restaurantId);
+    }
 }

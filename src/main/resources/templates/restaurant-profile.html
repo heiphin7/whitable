@@ -51,17 +51,10 @@
             </div>
 
             <div class="hours-card">
-                <h2>Часы Работы</h2>
-                <ul class="hours-list">
-                    <th:block th:each="entry : ${restaurant.openingHours}">
-                        <li>
-                            <!-- Отображаем день и часы -->
-                            <span class="day" th:text="${entry.key}"></span>
-                            <span class="time" th:text="${entry.value}"></span>
-                        </li>
-                    </th:block>
-                </ul>
+                <h2>Часы работы</h2>
+                <ul class="hours-list"><!-- сюда вставим через JS --></ul>
             </div>
+
 
             <div class="amenities-section">
                 <h2>Удобства & Услуги</h2>
@@ -365,10 +358,10 @@
         </aside>
     </div>
 
-    <section class="similar-restaurants">
-        <h2>Также могут понравиться</h2>
-        <div class="restaurant-grid" id="similarRestaurants">
-            <!-- TODO: Сделать карточки и вытащить из базы данных рестораны -->
+    <section class="similar-restaurants px-4 mt-8">
+        <h2 class="text-2xl font-semibold mb-4">Также могут понравиться</h2>
+        <div class="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="similarRestaurants">
+            <!-- Карточки вставляются JS -->
         </div>
     </section>
 </main>
@@ -481,6 +474,117 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     document.addEventListener("DOMContentLoaded", function() {
+        const restaurantId = /*[[${restaurant.id}]]*/ 0;
+        const container = document.getElementById("similarRestaurants");
+
+        // Спиннер
+        const spinner = document.createElement("div");
+        spinner.innerHTML = `
+        <div class="text-center py-10 w-full">
+            <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16 mx-auto animate-spin"></div>
+            <p class="mt-4 text-gray-500">Загрузка похожих ресторанов...</p>
+        </div>
+    `;
+        container.appendChild(spinner);
+
+        fetch(`/api/restaurant/${restaurantId}/related`)
+            .then(res => res.json())
+            .then(restaurants => {
+                container.innerHTML = "";
+                restaurants.forEach(renderRestaurantCard);
+            })
+            .catch(err => {
+                console.error(err);
+                container.innerHTML = "<p class='text-red-600 text-center'>Не удалось загрузить похожие рестораны.</p>";
+            });
+
+        function getFeatureIcon(feature) {
+            const icons = {
+                outdoor: '<i class="fas fa-umbrella-beach"></i>',
+                wifi: '<i class="fas fa-wifi"></i>',
+                delivery: '<i class="fas fa-motorcycle"></i>',
+                takeout: '<i class="fas fa-shopping-bag"></i>',
+                parking: '<i class="fas fa-parking"></i>'
+            };
+            return icons[feature] || '';
+        }
+
+        function renderRestaurantCard(restaurant) {
+            // Берём числовое значение рейтинга (или 0, если нет)
+            const ratingValue = parseFloat(restaurant.rating) || 0;
+
+            // Определяем текст и класс для фона
+            let ratingText, ratingBgClass;
+            if (ratingValue > 0) {
+                ratingText    = ratingValue.toFixed(1);
+                ratingBgClass = 'bg-yellow-500 text-white';
+            } else {
+                ratingText    = 'N/A';
+                ratingBgClass = 'bg-gray-200 text-gray-600';
+            }
+
+            const card = document.createElement("div");
+            card.className = `
+                restaurant-card
+                w-full max-w-[360px] min-h-[430px]
+                rounded-xl shadow-md bg-white hover:shadow-lg
+                transition duration-300 cursor-pointer flex flex-col
+            `.trim();
+
+
+            card.onclick = () => location.href = "/restaurant/" + restaurant.id;
+            card.innerHTML = `
+        <img src="${restaurant.photoUrl}" alt="${restaurant.name}" class="w-full h-52 object-cover rounded-t-xl">
+            <div class="p-5 flex flex-col flex-grow justify-between">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">${restaurant.name}</h3>
+                        <span class="text-xs font-bold px-2 py-1 rounded ${ratingBgClass}">
+                          ${ratingText}
+                        </span>
+                    </div>
+                <p class="text-gray-600 text-sm mb-2 overflow-hidden text-ellipsis line-clamp-4">${restaurant.description}</p>
+            </div>
+
+            <div class="text-gray-500 text-sm mt-2 flex items-center gap-2">
+                <span class="text-gray-700">${renderPrice(restaurant.averageCheck)}</span>
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-blue-600"></i>
+                    ${restaurant.address}
+                </span>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-3 pt-5">
+                ${restaurant.amenities.map(f => `
+                    <span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
+                        ${getFeatureIcon(mapAmenityKey(f.name))} ${f.name}
+                    </span>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+            container.appendChild(card);
+        }
+
+
+        function renderPrice(averageCheck) {
+            if (!averageCheck) return "—";
+            const count = Math.min(Math.floor(averageCheck / 1000), 4);
+            return "$".repeat(count || 1);
+        }
+
+        function mapAmenityKey(name) {
+            const map = {
+                "Уличные Сиденья": "outdoor",
+                "Wi-Fi": "wifi",
+                "Доставка": "delivery",
+                "Самовывоз": "takeout",
+                "Парковка": "parking"
+            };
+            return map[name] || "";
+        }
+
         // Элементы формы
         var reservationDate = document.getElementById("reservationDate");
         var reservationTime = document.getElementById("reservationTime");
@@ -503,11 +607,12 @@
         var tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         reservationDate.min = formatDate(tomorrow);
+
         var maxDate = new Date(tomorrow);
         maxDate.setDate(maxDate.getDate() + 13);
         reservationDate.max = formatDate(maxDate);
 
-        // Данные, получаемые с backend (предполагается, что они правильно подставляются)
+        // Данные, получаемые с backend
         var openingHours = /*[[${openingHours}]]*/ {};
         var bookings = /*[[${bookings}]]*/ {};
         var capacity = /*[[${capacity}]]*/;
@@ -522,6 +627,34 @@
             5: "Friday",
             6: "Saturday"
         };
+
+        // порядок дней и маппинг на английские ключи
+        const ruDays = [
+            'Понедельник','Вторник','Среда',
+            'Четверг','Пятница','Суббота','Воскресенье'
+        ];
+        const dayKey = {
+            'Понедельник':'Monday','Вторник':'Tuesday','Среда':'Wednesday',
+            'Четверг':'Thursday','Пятница':'Friday',
+            'Суббота':'Saturday','Воскресенье':'Sunday'
+        };
+
+        const hoursListEl = document.querySelector('.hours-list');
+        hoursListEl.innerHTML = ''; // на всякий случай очистить
+        ruDays.forEach(ru => {
+            const en = dayKey[ru];
+            const time = openingHours[en] && openingHours[en].trim().toLowerCase() !== 'closed'
+                ? openingHours[en]
+                : 'Закрыто';
+            const li = document.createElement('li');
+            li.className = 'flex justify-between py-1';
+            li.innerHTML = `
+    <span class="day font-medium">${ru}</span>
+    <span class="time text-gray-600">${time}</span>
+  `;
+            hoursListEl.appendChild(li);
+        });
+
 
         // Функция для проверки заполненности всех обязательных полей
         function allRequiredFieldsFilled() {

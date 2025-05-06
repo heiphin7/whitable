@@ -28,4 +28,9 @@ public class RestaurantApiController {
     public ResponseEntity<?> findByRestaurantId(@PathVariable("restaurantId") Long restaurantId) {
         return ResponseEntity.ok(restaurantService.findById(restaurantId));
     }
+
+    @GetMapping("/{id}/related")
+    public ResponseEntity<?> getRelatedRestaurants(@PathVariable("id") Long restaurantId) {
+        return ResponseEntity.ok(restaurantService.getRelatedRestaurants(restaurantId));
+    }
 }

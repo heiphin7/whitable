@@ -201,7 +201,18 @@ function renderRestaurants(restaurants) {
 
 
     restaurants.forEach(restaurant => {
-        const ratingClass = getRatingClass(restaurant.rating);
+        // Преобразуем рейтинг в число
+        const ratingValue = parseFloat(restaurant.rating) || 0;
+
+        // Задаём текст и класс в зависимости от наличия рейтинга
+        let ratingText, ratingClass;
+        if (ratingValue > 0) {
+            ratingText  = ratingValue.toFixed(1);
+            ratingClass = getRatingClass(ratingValue);
+        } else {
+            ratingText  = 'N/A';
+            ratingClass = 'bg-gray-200 text-gray-600';
+        }
 
         const card = document.createElement('div');
         card.className = 'restaurant-card';
@@ -211,7 +222,7 @@ function renderRestaurants(restaurants) {
       <div class="restaurant-info">
         <div class="restaurant-header">
           <h3 class="restaurant-name">${restaurant.name}</h3>
-          <span class="restaurant-rating ${ratingClass}">${restaurant.rating}</span>
+            <span class="restaurant-rating ${ratingClass}">${ratingText}</span>        
         </div>
         <p class="restaurant-description">${restaurant.description}</p>
         <div class="restaurant-meta">
