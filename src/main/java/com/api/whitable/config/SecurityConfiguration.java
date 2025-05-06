@@ -1,5 +1,6 @@
 package com.api.whitable.config;
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfiguration {
                 (csrf -> csrf.disable())
         ).authorizeHttpRequests(
                 (auth) -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers(
                                 "/login",
                                 "/registration",

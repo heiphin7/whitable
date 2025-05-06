@@ -123,7 +123,14 @@
         <!-- График -->
         <section class="bg-white rounded-lg shadow p-6 mb-6">
             <h2 class="text-lg font-semibold text-gray-700 mb-4">Бронирования по дням</h2>
-            <canvas id="bookingsChart" height="100"></canvas>
+
+            <!-- контейнер для спиннера -->
+            <div id="chartLoading" class="flex items-center justify-center h-48">
+                <i class="fas fa-spinner fa-spin fa-3x text-gray-500"></i>
+            </div>
+
+            <!-- сам Canvas, по умолчанию скрыт -->
+            <canvas id="bookingsChart" height="100" class="hidden"></canvas>
         </section>
 
         <!-- Таблица последних бронирований -->
@@ -166,41 +173,67 @@
 <!-- Скрипты -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Sidebar toggle остался без изменений...
         const sidebar = document.getElementById('sidebar');
         const btnOpen = document.getElementById('menu-open');
         const btnClose = document.getElementById('menu-close');
-
-        btnOpen.addEventListener('click', () => {
-            sidebar.classList.remove('-translate-x-full');
-            sidebar.classList.add('translate-x-0');
+        btnOpen?.addEventListener('click', () => {
+            sidebar.classList.replace('-translate-x-full','translate-x-0');
             btnOpen.classList.add('hidden');
             btnClose.classList.remove('hidden');
             document.getElementById('mainContent').classList.add('ml-64');
         });
-
-        btnClose.addEventListener('click', () => {
-            sidebar.classList.remove('translate-x-0');
-            sidebar.classList.add('-translate-x-full');
+        btnClose?.addEventListener('click', () => {
+            sidebar.classList.replace('translate-x-0','-translate-x-full');
             btnClose.classList.add('hidden');
             btnOpen.classList.remove('hidden');
             document.getElementById('mainContent').classList.remove('ml-64');
         });
-    });
 
-    // Chart.js init
-    const ctx = document.getElementById('bookingsChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: Array.from({ length: 30 }, (_, i) => String(i + 1).padStart(2, '0')),
-            datasets: [{
-                label: 'Бронирования',
-                data: [5,8,6,10,7,9,12,4,6,8,10,9,7,12,11,5,6,8,7,9,10,12,11,8,7,9,10,6,5,8],
-                backgroundColor: 'rgba(59,130,246,0.5)',
-                borderWidth: 1
-            }]
-        },
-        options: { scales: { y: { beginAtZero: true } } }
+        // Элементы спиннера и canvas
+        const loadingEl = document.getElementById('chartLoading');
+        const canvasEl  = document.getElementById('bookingsChart');
+        const ctx       = canvasEl.getContext('2d');
+
+        // Запросим данные
+        fetch('/api/bookings/data', { credentials: 'include' })
+            .then(res => {
+                if (!res.ok) throw new Error(res.statusText);
+                return res.json();
+            })
+            .then(raw => {
+                // 1) Группируем по дате, игнорируя часы
+                const byDay = raw.reduce((acc, { dateTime, count }) => {
+                    // приводим к "DD.MM.YYYY" (или любому удобному формату)
+                    const day = new Date(dateTime)
+                        .toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    acc[day] = (acc[day] || 0) + count;
+                    return acc;
+                }, {});
+
+                // 2) Формируем упорядоченные массивы меток и значений
+                const labels = Object.keys(byDay)
+                    .sort((a, b) => {
+                        const [d1,m1,y1] = a.split('.');
+                        const [d2,m2,y2] = b.split('.');
+                        return new Date(`${y1}-${m1}-${d1}`) - new Date(`${y2}-${m2}-${d2}`);
+                    });
+                const counts = labels.map(day => byDay[day]);
+
+                // 3) Рендерим Chart.js
+                document.getElementById('chartLoading').classList.add('hidden');
+                const canvas = document.getElementById('bookingsChart');
+                canvas.classList.remove('hidden');
+                new Chart(canvas.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels, datasets: [{ label: 'Бронирования', data: counts, backgroundColor: 'rgba(59,130,246,0.5)', borderWidth: 1 }] },
+                    options: { scales: { y: { beginAtZero: true } } }
+                });
+            })
+            .catch(err => {
+                document.getElementById('chartLoading').innerHTML =
+                    `<span class="text-red-600">Ошибка: ${err.message}</span>`;
+            });
     });
 </script>
 </body>

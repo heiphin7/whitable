@@ -13,9 +13,9 @@
     <nav class="nav-container">
         <a href="/" class="logo">Whitable</a>
         <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/restaurants.html" class="active">Restaurants</a></li>
-            <li><a href="/auth.html">Sign In</a></li>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/restaurants" class="active">Рестораны</a></li>
+            <li><a href="/bookings/my-bookings">Мои бронирования</a></li>
         </ul>
     </nav>
 </header>
@@ -87,7 +87,7 @@
             <h1>Рестораны в Астане</h1>
             <p class="results-count">Найдено <span id="restaurantCount">8</span> ресторанов</p>
 
-            <th:block th:if="${isAdmin}">
+
                 <!-- Кнопка "Плюс" для открытия модального окна -->
                 <button
                         id="addRestaurantBtn"
@@ -585,7 +585,6 @@
                         </form>
                     </div>
                 </div>
-            </th:block>
         </div>
 
         <div class="restaurant-grid" id="restaurantGrid">

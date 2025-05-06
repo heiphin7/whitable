@@ -5,112 +5,157 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Whitable - Restaurant Reservations Made Easy</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 <header class="header">
     <nav class="nav-container">
         <div class="logo">Whitable</div>
         <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#why-us">Why Us</a></li>
-            <li><a href="#benefits">Benefits</a></li>
+            <li><a href="/" style="color: #2563eb; font-weight: 600;">Главная</a></li>
+            <li><a href="/restaurants">Рестораны</a></li>
+            <li><a href="/bookings/my-bookings">Мои Бронирования</a></li>
         </ul>
     </nav>
 </header>
 
-<section id="home" class="hero">
+<section id="home" class="hero fade-in">
     <div class="hero-content">
-        <h1>Transform Your Dining Experience</h1>
-        <p>Experience the future of restaurant reservations with Whitable. Simple, smart, and seamless booking for unforgettable dining moments.</p>
-        <button class="cta-button">Start Booking Now</button>
+        <h1>Преобразите свой опыт посещения ресторанов</h1>
+        <p>Откройте будущее бронирования столиков с Whitable. Просто, удобно и надёжно для незабываемых моментов.</p>
+        <button class="cta-button">Начать бронирование</button>
     </div>
 </section>
 
 <section id="why-us" class="why-us">
-    <h2>Why Choose Whitable</h2>
+    <h2>Почему выбирают Whitable</h2>
     <div class="features-grid">
-        <div class="feature-card">
+        <div class="feature-card fade-in">
             <div class="feature-icon">🕒</div>
-            <h3>Real-Time Availability</h3>
-            <p>Book your favorite restaurants instantly with live table availability and immediate confirmation.</p>
+            <h3>Доступность в реальном времени</h3>
+            <p>Мгновенное бронирование любимых ресторанов с учётом свободных столиков и подтверждением здесь и сейчас.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card fade-in">
             <div class="feature-icon">📱</div>
-            <h3>Smart Booking</h3>
-            <p>Intuitive mobile app with personalized recommendations based on your dining preferences.</p>
+            <h3>Умное бронирование</h3>
+            <p>Интуитивное мобильное приложение с персональными рекомендациями, основанными на ваших предпочтениях.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card fade-in">
             <div class="feature-icon">🎁</div>
-            <h3>Exclusive Rewards</h3>
-            <p>Earn points with every booking and enjoy special perks at partner restaurants.</p>
+            <h3>Эксклюзивные бонусы</h3>
+            <p>Накопление баллов за каждое бронирование и специальные привилегии в партнёрских ресторанах.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card fade-in">
             <div class="feature-icon">🔔</div>
-            <h3>Smart Notifications</h3>
-            <p>Get timely reminders and updates about your reservations and special offers.</p>
+            <h3>Умные уведомления</h3>
+            <p>Своевременные напоминания о бронированиях и персональные предложения.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card fade-in">
             <div class="feature-icon">⭐</div>
-            <h3>Verified Reviews</h3>
-            <p>Make informed decisions with authentic reviews from verified diners.</p>
+            <h3>Проверенные отзывы</h3>
+            <p>Решения на основе реальных отзывов от проверенных гостей.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card fade-in">
             <div class="feature-icon">🎯</div>
-            <h3>Special Occasions</h3>
-            <p>Dedicated support for planning special events and celebrations.</p>
+            <h3>Особые события</h3>
+            <p>Поддержка в организации важных мероприятий и праздников.</p>
         </div>
     </div>
 </section>
 
-<section id="benefits" class="benefits">
-    <div class="benefits-container">
-        <div class="benefit-column">
-            <h2>For Restaurants</h2>
-            <ul class="benefit-list">
-                <li>Smart table management system</li>
-                <li>Reduce no-shows with automated confirmations</li>
-                <li>Detailed analytics and insights</li>
-                <li>Customizable reservation policies</li>
-                <li>Integration with POS systems</li>
-                <li>Customer preference tracking</li>
-                <li>Special event management tools</li>
-                <li>Marketing campaign features</li>
-            </ul>
-        </div>
-        <div class="benefit-column">
-            <h2>For Diners</h2>
-            <ul class="benefit-list">
-                <li>24/7 instant booking capability</li>
-                <li>Personalized dining recommendations</li>
-                <li>Easy modification and cancellation</li>
-                <li>Digital loyalty program</li>
-                <li>Special occasion planning</li>
-                <li>Last-minute availability alerts</li>
-                <li>Exclusive member benefits</li>
-                <li>Mobile check-in option</li>
-            </ul>
-        </div>
+<section id="faq" class="faq fade-in px-4 py-16">
+    <h2 class="text-3xl font-semibold text-center mb-8">Часто задаваемые вопросы</h2>
+    <div class="max-w-3xl mx-auto space-y-4">
+        <details class="group bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <summary
+                    class="cursor-pointer px-6 py-4 flex justify-between items-center text-lg font-medium
+               text-gray-800 hover:bg-gray-50 transition-colors duration-200">
+                Как происходит бронирование и отмена брони?
+                <i class="fas fa-chevron-down transition-transform duration-200 group-open:rotate-180"></i>
+            </summary>
+            <p
+                    class="px-6 pb-4 text-gray-600 max-h-0 opacity-0 overflow-hidden
+               transition-all duration-300 group-open:max-h-40 group-open:opacity-100">
+                Всё происходит онлайн: выберите ресторан, дату, время и количество гостей, подтвердите бронь и при необходимости отмените её в личном кабинете.
+            </p>
+        </details>
+
+        <details class="group bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <summary
+                    class="cursor-pointer px-6 py-4 flex justify-between items-center text-lg font-medium
+               text-gray-800 hover:bg-gray-50 transition-colors duration-200">
+                Как выбрать нужный ресторан?
+                <i class="fas fa-chevron-down transition-transform duration-200 group-open:rotate-180"></i>
+            </summary>
+            <p
+                    class="px-6 pb-4 text-gray-600 max-h-0 opacity-0 overflow-hidden
+               transition-all duration-300 group-open:max-h-40 group-open:opacity-100">
+                На странице ресторанов доступны фильтры по кухне, расположению, рейтингу и цене, чтобы вы могли быстро найти идеальный вариант.
+            </p>
+        </details>
+
+        <details class="group bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <summary
+                    class="cursor-pointer px-6 py-4 flex justify-between items-center text-lg font-medium
+               text-gray-800 hover:bg-gray-50 transition-colors duration-200">
+                Сколько человек можно забронировать максимально?
+                <i class="fas fa-chevron-down transition-transform duration-200 group-open:rotate-180"></i>
+            </summary>
+            <p
+                    class="px-6 pb-4 text-gray-600 max-h-0 opacity-0 overflow-hidden
+               transition-all duration-300 group-open:max-h-40 group-open:opacity-100">
+                Вы можете забронировать столик от 1 до 8 человек. Для больших компаний свяжитесь с рестораном напрямую.
+            </p>
+        </details>
+
+        <details class="group bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <summary
+                    class="cursor-pointer px-6 py-4 flex justify-between items-center text-lg font-medium
+               text-gray-800 hover:bg-gray-50 transition-colors duration-200">
+                Есть ли плата за использование сервиса?
+                <i class="fas fa-chevron-down transition-transform duration-200 group-open:rotate-180"></i>
+            </summary>
+            <p
+                    class="px-6 pb-4 text-gray-600 max-h-0 opacity-0 overflow-hidden
+               transition-all duration-300 group-open:max-h-40 group-open:opacity-100">
+                Сервис Whitable бесплатен для гостей. Рестораны могут взимать депозит или предоплату по своему усмотрению.
+            </p>
+        </details>
+
+        <details class="group bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <summary
+                    class="cursor-pointer px-6 py-4 flex justify-between items-center text-lg font-medium
+               text-gray-800 hover:bg-gray-50 transition-colors duration-200">
+                Как связаться с поддержкой?
+                <i class="fas fa-chevron-down transition-transform duration-200 group-open:rotate-180"></i>
+            </summary>
+            <p
+                    class="px-6 pb-4 text-gray-600 max-h-0 opacity-0 overflow-hidden
+               transition-all duration-300 group-open:max-h-40 group-open:opacity-100">
+                Для связи со службой поддержки используйте форму обратной связи на сайте или напишите нам в чате мобильного приложения — мы на связи 24/7.
+            </p>
+        </details>
     </div>
 </section>
 
-<section class="cta">
+
+<section class="cta fade-in">
     <div class="cta-content">
-        <h2>Ready to Transform Your Dining Experience?</h2>
-        <p>Join thousands of satisfied restaurants and diners in the Whitable community</p>
+        <h2>Готовы преобразить ваш опыт?</h2>
+        <p>Присоединяйтесь к тысячам довольных посетителей и ресторанов в сообществе Whitable</p>
         <div class="cta-buttons">
-            <button class="cta-button">Register Restaurant</button>
-            <button class="cta-button secondary">Make Reservation</button>
+            <button class="cta-button">Забронировать столик</button>
         </div>
     </div>
 </section>
 
-<footer class="footer">
+<footer class="footer fade-in">
     <div class="footer-content">
         <div class="footer-section">
-            <h3>About Whitable</h3>
-            <p>Revolutionizing the dining experience through innovative reservation technology and exceptional service.</p>
+            <h3>О Whitable</h3>
+            <p>Инновационные решения для бронирования и непревзойдённый сервис.</p>
             <div class="social-links">
                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                 <a href="#"><i class="fab fa-twitter"></i></a>
@@ -119,53 +164,66 @@
             </div>
         </div>
         <div class="footer-section">
-            <h3>For Restaurants</h3>
+            <h3>Для ресторанов</h3>
             <ul>
-                <li><a href="#">Partner With Us</a></li>
-                <li><a href="#">Restaurant Dashboard</a></li>
-                <li><a href="#">Success Stories</a></li>
-                <li><a href="#">Marketing Tools</a></li>
+                <li><a href="#">Партнерство</a></li>
+                <li><a href="#">Панель управления</a></li>
+                <li><a href="#">Истории успеха</a></li>
+                <li><a href="#">Маркетинговые инструменты</a></li>
             </ul>
         </div>
         <div class="footer-section">
-            <h3>For Diners</h3>
+            <h3>Для гостей</h3>
             <ul>
-                <li><a href="#">Search Restaurants</a></li>
-                <li><a href="#">Loyalty Program</a></li>
-                <li><a href="#">Mobile App</a></li>
-                <li><a href="#">Gift Cards</a></li>
+                <li><a href="#">Поиск ресторанов</a></li>
+                <li><a href="#">Программа лояльности</a></li>
+                <li><a href="#">Мобильное приложение</a></li>
+                <li><a href="#">Подарочные сертификаты</a></li>
             </ul>
         </div>
         <div class="footer-section">
-            <h3>Support</h3>
+            <h3>Поддержка</h3>
             <ul>
-                <li><a href="#">Help Center</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">FAQs</a></li>
-                <li><a href="#">Feedback</a></li>
+                <li><a href="#">Центр помощи</a></li>
+                <li><a href="#">Связаться с нами</a></li>
+                <li><a href="#">Часто задаваемые вопросы</a></li>
+                <li><a href="#">Обратная связь</a></li>
             </ul>
         </div>
         <div class="footer-section">
-            <h3>Legal</h3>
+            <h3>Юридическая информация</h3>
             <ul>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
-                <li><a href="#">Cookie Policy</a></li>
-                <li><a href="#">GDPR Compliance</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Условия использования</a></li>
+                <li><a href="#">Политика cookie</a></li>
+                <li><a href="#">GDPR</a></li>
             </ul>
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2025 Whitable. All rights reserved.</p>
+        <p>&copy; 2025 Whitable. Все права защищены.</p>
         <div class="footer-bottom-links">
             <a href="#">Sitemap</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Security</a>
-            <a href="#">Press Kit</a>
+            <a href="#">Доступность</a>
+            <a href="#">Безопасность</a>
+            <a href="#">Пресс-кит</a>
         </div>
     </div>
 </footer>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const faders = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('appear');
+                }
+            });
+        }, { threshold: 0.2 });
+        faders.forEach(el => observer.observe(el));
+    });
+</script>
 <script type="module" src="/js/main.js"></script>
 </body>
 </html>

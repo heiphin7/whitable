@@ -205,6 +205,7 @@ function renderRestaurants(restaurants) {
 
         const card = document.createElement('div');
         card.className = 'restaurant-card';
+        card.style.cursor = 'pointer';
         card.innerHTML = `
       <img src="${restaurant.image}" alt="${restaurant.name}" class="restaurant-image">
       <div class="restaurant-info">
@@ -226,6 +227,11 @@ function renderRestaurants(restaurants) {
         </div>
       </div>
     `;
+
+        // Добавляем переход по клику на карточку
+        card.addEventListener('click', () => {
+            window.location.href = `/restaurant/${restaurant.id}`;
+        });
 
         restaurantGrid.appendChild(card);
     });

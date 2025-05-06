@@ -14,20 +14,14 @@
     <nav class="nav-container">
         <a href="/" class="logo">Whitable</a>
         <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/restaurants.html" class="active">Restaurants</a></li>
-            <li><a href="/login">Sign In</a></li>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/restaurants">Рестораны</a></li>
+            <li><a href="/bookings/my-bookings">Мои Бронирования</a></li>
         </ul>
     </nav>
 </header>
 
 <main class="profile-container">
-    <div class="back-navigation">
-        <a href="/restaurants" class="back-link">
-            <i class="fas fa-arrow-left"></i> Вернуться к ресторанам
-        </a>
-    </div>
-
     <section class="restaurant-hero">
         <div class="hero-image">
             <img th:src="${restaurant.getPhotoUrl()}" alt="La Piazza Italiana" id="restaurantImage">

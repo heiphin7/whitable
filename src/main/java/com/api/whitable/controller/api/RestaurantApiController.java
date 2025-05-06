@@ -29,14 +29,3 @@ public class RestaurantApiController {
         return ResponseEntity.ok(restaurantService.findById(restaurantId));
     }
 }
-/*
-Salter's
-Добро пожаловать в галерею гастрономических шедевров - SALTER'S.
-Территория изощренных вкусов откроется в отеле Sheraton Nur-Sultan 20 мая 2022 года
-Воскресенье : Закрыто \n Вторник - Суббота: 18:00-2:00
-Улица Сыганак 60/1 Sheraton Astana Hotel
-+77713878026
-averageCheck=15000
-https://www.instagram.com/salters.restaurant/
-
-*/

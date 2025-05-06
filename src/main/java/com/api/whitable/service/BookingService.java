@@ -186,8 +186,10 @@ public class BookingService {
     }
 
     public List<BookingData> getBookingsData() {
-        LocalDateTime end   = LocalDateTime.now().with(LocalTime.MAX);
-        LocalDateTime start = end.minusDays(6).with(LocalTime.MIN);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime start = now.minusDays(16).with(LocalTime.MIN);
+        LocalDateTime end   = now.plusDays(14).with(LocalTime.MAX);
+
         return bookingRepository.countByDayBetween(start, end);
     }
 
