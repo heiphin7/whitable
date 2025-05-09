@@ -53,4 +53,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     long countByStartTimeBetween(LocalDateTime from, LocalDateTime to);
 
     List<Booking> findTop5ByOrderByStartTimeDesc();
+    List<Booking> findByUserIdAndRestaurantId(Long userId, Long restaurantId);
 }

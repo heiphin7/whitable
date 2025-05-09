@@ -120,12 +120,19 @@ public class BookingService {
 
     public boolean canLeaveReview(Long userId, Long restaurantId) {
         // Проверяем, есть ли хотя бы одно завершённое бронирование
-        List<Booking> bookings = bookingRepository.findByUserIdAndRestaurantIdAndBookingStatus(
-                userId, restaurantId, Status.COMPLETED
+        List<Booking> bookings = bookingRepository.findByUserIdAndRestaurantId(
+                userId, restaurantId
         );
 
-        // Если брони нет — сразу false
+        // Если брони нет — сразу false]
         if (bookings.isEmpty()) {
+            return false;
+        }
+
+        boolean canReview = bookings.stream()
+                .anyMatch(b -> b.getBookingStatus() == Status.COMPLETED);
+
+        if (!canReview) {
             return false;
         }
 

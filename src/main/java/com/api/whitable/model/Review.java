@@ -13,7 +13,8 @@ import java.util.Set;
 @Data
 public class Review {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne @JoinColumn(name = "user_id", nullable = false)
