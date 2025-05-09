@@ -187,8 +187,6 @@
               statWeek.textContent  = bookingsCache.filter(b =>
                       new Date(b.reservationTime).getTime() > now - 7*24*60*60*1000
               ).length;
-              // Если у вас есть поле reviewCount у BookingInfoDto — замените ниже:
-              statReviews.textContent = bookingsCache.reduce((sum, b) => sum + (b.reviewCount || 0), 0);
 
               // 4) Рендерим таблицу
               tbody.innerHTML = '';
@@ -289,9 +287,6 @@
                   el.className = `status-btn cursor-pointer px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(updatedStatus)}`;
                 });
 
-        // (опционально) обновляем статистику, если она зависит от статусов
-        // например:
-        // statReviews.textContent = bookingsCache.reduce(...);
       } catch (err) {
         alert('Ошибка: ' + err.message);
       } finally {

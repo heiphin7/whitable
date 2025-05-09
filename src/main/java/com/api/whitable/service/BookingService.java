@@ -62,24 +62,28 @@ public class BookingService {
     }
 
     public List<Booking> getBookingsByUserId(Long userId) throws IllegalArgumentException {
-        // Здесь мы просто ищем пользователя чтобы удостовериться что при вызове не будет ошибки
+        // Убеждаемся, что пользователь существует
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("Пользователь с указанным ID не найден!")
         );
 
         List<Booking> bookings = bookingRepository.findAllByUserId(userId);
 
+        LocalDateTime now = LocalDateTime.now();
         for (Booking booking : bookings) {
-            if (booking.getEndTime().isBefore(LocalDateTime.now()) &&
-                    booking.getBookingStatus() == Status.CONFIRMED) {
+            // Если бронирование закончилось и статус ещё не COMPLETED и не CANCELLED
+            if (booking.getEndTime().isBefore(now)
+                    && booking.getBookingStatus() != Status.COMPLETED
+                    && booking.getBookingStatus() != Status.CANCELED) {
 
                 booking.setBookingStatus(Status.COMPLETED);
-                bookingRepository.save(booking); // сохраняем изменения
+                bookingRepository.save(booking);
             }
         }
 
         return bookings;
     }
+
 
     public void cancelBooking(Long bookingId, Long userId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
@@ -197,5 +201,9 @@ public class BookingService {
         LocalDateTime end   = LocalDateTime.now().with(LocalTime.MAX);
         LocalDateTime start = end.minusDays(6).with(LocalTime.MIN);
         return bookingRepository.countByStartTimeBetween(start, end);
+    }
+
+    public List<Booking> getLastBookings() {
+        return bookingRepository.findTop5ByOrderByStartTimeDesc();
     }
 }

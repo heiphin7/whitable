@@ -46,6 +46,8 @@ public class AdminController {
         model.addAttribute("bookingsCount", bookingService.getBookingsCount());
         model.addAttribute("reviewsCount", reviewService.getReviewsCount());
         model.addAttribute("lastWeekBookingsCount", bookingService.getLastWeekBookingsCount());
+
+        System.out.println("Reviews count: " + reviewService.getReviewsCount());
         return "admin-bookings";
     }
 

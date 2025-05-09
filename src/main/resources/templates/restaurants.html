@@ -6,7 +6,9 @@
     <title>Whitable - Find Your Perfect Restaurant</title>
     <link rel="stylesheet" href="/css/restaurants.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="/css/footer.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 <header class="header">
@@ -22,8 +24,20 @@
 
 <main class="restaurants-container">
     <aside class="filters-sidebar w-64 p-4 bg-white">
+        <div class="sort-section mb-[12px]">
+            <h2>Сортировать</h2>
+            <select id="sortSelect" class="sort-select">
+                <option value="rating-desc">Рейтинг (по убыванию)</option>
+                <option value="rating-asc">Рейтинг (по возрастанию)</option>
+                <option value="price-desc">Цена (сначала дорогие)</option>
+                <option value="price-asc">Цена (сначала дешёвые)</option>
+                <option value="name-asc">Название (А–Я)</option>
+                <option value="name-desc">Название (Я–А)</option>
+            </select>
+        </div>
+
         <div class="filters-section">
-            <h2>Filters</h2>
+            <h2>Фильтры</h2>
 
             <div class="filter-group">
                 <h3>Тип кухни</h3>
@@ -33,8 +47,7 @@
                     <label><input type="checkbox" name="cuisine" value="Мексиканская"> Мексиканская</label>
                     <label><input type="checkbox" name="cuisine" value="Китайская"> Китайская</label>
                     <label><input type="checkbox" name="cuisine" value="Французская"> Французская</label>
-                    <label><input type="checkbox" name="cuisine" value="Французская"> Испанская</label>
-                    <label><input type="checkbox" name="cuisine" value="Французская"> Американская</label>
+                    <label><input type="checkbox" name="cuisine" value="Американская"> Американская</label>
                 </div>
             </div>
 
@@ -68,18 +81,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="sort-section">
-            <h2>Сортировать</h2>
-            <select id="sortSelect" class="sort-select">
-                <option value="rating-desc">Rating (High to Low)</option>
-                <option value="rating-asc">Rating (Low to High)</option>
-                <option value="price-desc">Price (High to Low)</option>
-                <option value="price-asc">Price (Low to High)</option>
-                <option value="name-asc">Name (A-Z)</option>
-                <option value="name-desc">Name (Z-A)</option>
-            </select>
-        </div>
     </aside>
 
     <section class="restaurants-list">
@@ -94,11 +95,11 @@
     </section>
 </main>
 
-<footer class="footer">
+<footer class="footer fade-in">
     <div class="footer-content">
         <div class="footer-section">
-            <h3>About Whitable</h3>
-            <p>Revolutionizing the dining experience through innovative reservation technology and exceptional service.</p>
+            <h3>О Whitable</h3>
+            <p>Инновационные решения для бронирования и непревзойдённый сервис.</p>
             <div class="social-links">
                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                 <a href="#"><i class="fab fa-twitter"></i></a>
@@ -107,48 +108,49 @@
             </div>
         </div>
         <div class="footer-section">
-            <h3>For Restaurants</h3>
+            <h3>Для ресторанов</h3>
             <ul>
-                <li><a href="#">Partner With Us</a></li>
-                <li><a href="#">Restaurant Dashboard</a></li>
-                <li><a href="#">Success Stories</a></li>
-                <li><a href="#">Marketing Tools</a></li>
+                <li><a href="#">Партнерство</a></li>
+                <li><a href="#">Панель управления</a></li>
+                <li><a href="#">Истории успеха</a></li>
+                <li><a href="#">Маркетинговые инструменты</a></li>
             </ul>
         </div>
         <div class="footer-section">
-            <h3>For Diners</h3>
+            <h3>Для гостей</h3>
             <ul>
-                <li><a href="#">Search Restaurants</a></li>
-                <li><a href="#">Loyalty Program</a></li>
-                <li><a href="#">Mobile App</a></li>
-                <li><a href="#">Gift Cards</a></li>
+                <li><a href="#">Поиск ресторанов</a></li>
+                <li><a href="#">Программа лояльности</a></li>
+                <li><a href="#">Мобильное приложение</a></li>
+                <li><a href="#">Подарочные сертификаты</a></li>
             </ul>
         </div>
         <div class="footer-section">
-            <h3>Support</h3>
+            <h3>Поддержка</h3>
             <ul>
-                <li><a href="#">Help Center</a></li>
-                <li><a href="#">FAQs</a></li>
-                <li><a href="#">Feedback</a></li>
+                <li><a href="#">Центр помощи</a></li>
+                <li><a href="#">Связаться с нами</a></li>
+                <li><a href="#">Часто задаваемые вопросы</a></li>
+                <li><a href="#">Обратная связь</a></li>
             </ul>
         </div>
         <div class="footer-section">
-            <h3>Legal</h3>
+            <h3>Юридическая информация</h3>
             <ul>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
-                <li><a href="#">Cookie Policy</a></li>
-                <li><a href="#">GDPR Compliance</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Условия использования</a></li>
+                <li><a href="#">Политика cookie</a></li>
+                <li><a href="#">GDPR</a></li>
             </ul>
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2024 Whitable. All rights reserved.</p>
+        <p>&copy; 2025 Whitable. Все права защищены.</p>
         <div class="footer-bottom-links">
             <a href="#">Sitemap</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Security</a>
-            <a href="#">Press Kit</a>
+            <a href="#">Доступность</a>
+            <a href="#">Безопасность</a>
+            <a href="#">Пресс-кит</a>
         </div>
     </div>
 </footer>

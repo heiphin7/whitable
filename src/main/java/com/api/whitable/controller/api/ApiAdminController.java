@@ -87,4 +87,10 @@ public class ApiAdminController {
     public ResponseEntity<?> getBookingsData() {
         return ResponseEntity.ok(bookingService.getBookingsData());
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/bookings/lastBookings")
+    public ResponseEntity<?> getLastBookings() {
+        return ResponseEntity.ok(bookingService.getLastBookings());
+    }
 }

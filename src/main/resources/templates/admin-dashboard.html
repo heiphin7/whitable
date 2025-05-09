@@ -137,6 +137,12 @@
         <section class="bg-white rounded-lg shadow p-6">
             <h2 class="text-lg font-semibold text-gray-700 mb-4">Последние бронирования</h2>
             <div class="overflow-x-auto">
+                <!-- Спиннер загрузки -->
+                <div id="lastBookingsLoading" class="flex items-center justify-center h-24">
+                    <i class="fas fa-spinner fa-spin fa-2x text-gray-500"></i>
+                    <span class="ml-3 text-gray-600 text-lg">Загрузка последних бронирований...</span>
+                </div>
+
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                     <tr>
@@ -233,6 +239,58 @@
             .catch(err => {
                 document.getElementById('chartLoading').innerHTML =
                     `<span class="text-red-600">Ошибка: ${err.message}</span>`;
+            });
+
+        const bookingsTableBody = document.querySelector("section table tbody");
+        const spinnerContainer = document.getElementById("lastBookingsLoading");
+
+        // Очищаем старые строки
+        bookingsTableBody.innerHTML = '';
+
+        fetch('/api/bookings/lastBookings', { credentials: 'include' })
+            .then(res => {
+                if (!res.ok) throw new Error(res.statusText);
+                return res.json();
+            })
+            .then(bookings => {
+                spinnerContainer.remove(); // убираем спиннер
+
+                bookings.forEach(b => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-50 transition-colors";
+
+                    const formattedDate = new Date(b.startTime).toLocaleString('ru-RU', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const statusColors = {
+                        'PENDING':   'bg-yellow-100 text-yellow-800',
+                        'CONFIRMED': 'bg-green-100 text-green-800',
+                        'CANCELED':  'bg-red-100 text-red-800',
+                        'COMPLETED': 'bg-blue-100 text-blue-800'
+                    };
+
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[b.bookingStatus] || 'bg-gray-100 text-gray-800'}">
+                                ${b.bookingStatus}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.guestCount}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">${formattedDate}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.restaurant?.name || '—'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">${b.user?.email || '—'}</td>
+                    `;
+                    bookingsTableBody.appendChild(tr);
+                });
+            })
+            .catch(err => {
+                spinnerContainer.innerHTML = `<span class="text-red-600">Ошибка загрузки: ${err.message}</span>`;
             });
     });
 </script>

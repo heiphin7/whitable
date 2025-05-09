@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8" />
-    <title>Whitable - Sign In or Register</title>
+    <title>Whitable — Вход и регистрация</title>
     <link rel="stylesheet" th:href="@{/css/auth.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -11,9 +11,6 @@
 <header class="auth-header">
     <nav class="nav-container">
         <a th:href="@{/}" class="logo">Whitable</a>
-        <div class="nav-right">
-            <a th:href="@{/}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
-        </div>
     </nav>
 </header>
 
@@ -22,15 +19,14 @@
         <div class="auth-tabs">
             <button class="tab-btn" data-tab="login"
                     th:classappend="${action} == 'login' ? ' active' : ''">
-                Sign In
+                Вход
             </button>
             <button class="tab-btn" data-tab="register"
                     th:classappend="${action} == 'registration' ? ' active' : ''">
-                Register
+                Регистрация
             </button>
         </div>
 
-        <!-- Если есть errorMessage или successMessage, выводим их -->
         <div class="flash-messages space-y-3 text-center mx-auto" style="margin-bottom: 15px; max-width: 400px;">
             <div
                     class="success-message bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
@@ -46,8 +42,7 @@
             </div>
         </div>
 
-
-        <!-- Login Form -->
+        <!-- Форма входа -->
         <form id="loginForm"
               class="auth-form"
               th:classappend="${action} == 'login' ? ' active' : ''"
@@ -55,28 +50,27 @@
               method="post"
               novalidate>
 
-            <!-- Поля AuthDto: email, password -->
             <div class="form-group">
-                <label for="loginEmail">Email Address</label>
+                <label for="loginEmail">Электронная почта</label>
                 <input
                         type="email"
                         id="loginEmail"
                         name="email"
                         required
-                        placeholder="Enter your email"
+                        placeholder="Введите email"
                         th:value="${dto?.email}">
                 <span class="error-message"></span>
             </div>
 
             <div class="form-group">
-                <label for="loginPassword">Password</label>
+                <label for="loginPassword">Пароль</label>
                 <div class="password-input">
                     <input
                             type="password"
                             id="loginPassword"
                             name="password"
                             required
-                            placeholder="Enter your password">
+                            placeholder="Введите пароль">
                     <button type="button" class="toggle-password">
                         <i class="far fa-eye"></i>
                     </button>
@@ -86,17 +80,13 @@
 
             <div class="form-group checkbox">
                 <input type="checkbox" id="rememberMe">
-                <label for="rememberMe">Remember me</label>
+                <label for="rememberMe">Запомнить меня</label>
             </div>
 
-            <button type="submit" class="auth-button" disabled>Sign In</button>
-
-            <div class="form-footer">
-                <a href="#" class="forgot-password">Forgot Password?</a>
-            </div>
+            <button type="submit" class="auth-button" disabled>Войти</button>
         </form>
 
-        <!-- Register Form -->
+        <!-- Форма регистрации -->
         <form id="registerForm"
               class="auth-form"
               th:classappend="${action} == 'registration' ? ' active' : ''"
@@ -104,40 +94,39 @@
               method="post"
               novalidate>
 
-            <!-- Поля CreateUserDto: username, email, password -->
             <div class="form-group">
-                <label for="registerName">Full Name</label>
+                <label for="registerName">Имя и фамилия</label>
                 <input
                         type="text"
                         id="registerName"
                         name="username"
                         required
-                        placeholder="Enter your full name"
+                        placeholder="Введите имя и фамилию"
                         th:value="${dto?.username}">
                 <span class="error-message"></span>
             </div>
 
             <div class="form-group">
-                <label for="registerEmail">Email Address</label>
+                <label for="registerEmail">Электронная почта</label>
                 <input
                         type="email"
                         id="registerEmail"
                         name="email"
                         required
-                        placeholder="Enter your email"
+                        placeholder="Введите email"
                         th:value="${dto?.email}">
                 <span class="error-message"></span>
             </div>
 
             <div class="form-group">
-                <label for="registerPassword">Password</label>
+                <label for="registerPassword">Пароль</label>
                 <div class="password-input">
                     <input
                             type="password"
                             id="registerPassword"
                             name="password"
                             required
-                            placeholder="Create a password">
+                            placeholder="Придумайте пароль">
                     <button type="button" class="toggle-password">
                         <i class="far fa-eye"></i>
                     </button>
@@ -146,14 +135,14 @@
             </div>
 
             <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
+                <label for="confirmPassword">Подтвердите пароль</label>
                 <div class="password-input">
                     <input
                             type="password"
                             id="confirmPassword"
                             name="confirmPassword"
                             required
-                            placeholder="Confirm your password">
+                            placeholder="Подтвердите пароль">
                     <button type="button" class="toggle-password">
                         <i class="far fa-eye"></i>
                     </button>
@@ -163,32 +152,30 @@
 
             <div class="form-group checkbox">
                 <input type="checkbox" id="termsAccept" required>
-                <label for="termsAccept">I accept the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                <label for="termsAccept">Я принимаю <a href="#">Условия использования</a> и <a href="#">Политику конфиденциальности</a></label>
                 <span class="error-message"></span>
             </div>
 
-            <button type="submit" class="auth-button" disabled>Create Account</button>
+            <button type="submit" class="auth-button" disabled>Создать аккаунт</button>
         </form>
     </div>
 </main>
 
 <footer class="auth-footer">
     <div class="footer-content">
-        <p>&copy; 2024 Whitable. All rights reserved.</p>
+        <p>&copy; 2025 Whitable. Все права защищены.</p>
         <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Help Center</a>
-            <a href="#">Contact Support</a>
+            <a href="#">Политика конфиденциальности</a>
+            <a href="#">Условия использования</a>
+            <a href="#">Центр помощи</a>
+            <a href="#">Связаться с поддержкой</a>
         </div>
     </div>
 </footer>
-<script>
-    // Получаем переменную action с бэкенда через Thymeleaf
-    var action = '[(${action})]';
-    console.log("Action: " + action);
 
-    // Функция переключения активного окна
+<script>
+    var action = '[(${action})]';
+
     function setActiveTab(tabName) {
         const tabBtns = document.querySelectorAll('.tab-btn');
         const forms = document.querySelectorAll('.auth-form');

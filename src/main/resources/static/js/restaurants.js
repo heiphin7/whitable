@@ -21,9 +21,7 @@ async function getData() {
             throw new Error(`Ошибка при запросе: ${response.status}`);
         }
 
-        const data = await response.json();
-        console.log('Полученные данные:', data);
-        return data;
+        return await response.json();
     } catch (error) {
         console.error('Произошла ошибка:', error);
         // Если произошла ошибка, вернем пустой массив, чтобы не ломать основной код
@@ -33,11 +31,8 @@ async function getData() {
 
 // Самовызывающаяся функция, где мы дожидаемся getData()
 (async () => {
-    console.log('Перед запросом у нас', restaurants.length, 'ресторан(ов).');
-
     // Ждем данные с бэкенда
     const result = await getData();
-    console.log('Явно дожидаемся результата и работаем дальше с данными:', result);
 
     // Допустим, вы хотите «добавить» (push) в конец массива restaurants
     // или «заменить» его полностью. Ниже пример "добавить".
@@ -60,9 +55,6 @@ async function getData() {
             features: mappedFeatures
         });
     });
-
-    console.log('После запроса у нас', restaurants.length, 'ресторан(ов).');
-    console.log('Все рестораны теперь:', restaurants);
 
     init();
 })();
@@ -157,9 +149,9 @@ function sortRestaurants(restaurants) {
         case 'rating-asc':
             return sortedRestaurants.sort((a, b) => a.rating - b.rating);
         case 'price-desc':
-            return sortedRestaurants.sort((a, b) => b.price.length - a.price.length);
+            return sortedRestaurants.sort((a, b) => getPriceValue(b.price) - getPriceValue(a.price));
         case 'price-asc':
-            return sortedRestaurants.sort((a, b) => a.price.length - b.price.length);
+            return sortedRestaurants.sort((a, b) => getPriceValue(a.price) - getPriceValue(b.price));
         case 'name-asc':
             return sortedRestaurants.sort((a, b) => a.name.localeCompare(b.name));
         case 'name-desc':
@@ -254,6 +246,10 @@ function getRatingClass(rating) {
     if (rating >= 4.0) return 'rating-4';
     if (rating >= 3.0) return 'rating-3';
     return 'rating-2';
+}
+
+function getPriceValue(price) {
+    return price ? price.length : 0;
 }
 
 // Helper function to get feature icon

@@ -74,17 +74,16 @@ const registerPatterns = {
 
 // Сообщения
 const errorMessages = {
-    required: 'This field is required',
-    // Login
-    email: 'Please enter a valid email address',
-    password: 'Password must be at least 8 characters',
-    // Register
-    name: 'Please enter a valid name (minimum 2 characters)',
-    registerPassword: 'Password must be at least 8 characters with 1 letter and 1 number',
-    confirmPassword: 'Passwords do not match',
-    terms: 'You must accept the terms and conditions'
+    required: 'Это поле обязательно',
+    // Вход
+    email: 'Введите корректный адрес электронной почты',
+    password: 'Пароль должен быть минимум 8 символов',
+    // Регистрация
+    name: 'Имя должно содержать не менее 2 символов',
+    registerPassword: 'Пароль не менее 8 символов, с буквой и цифрой',
+    confirmPassword: 'Пароли не совпадают',
+    terms: 'Необходимо принять условия и соглашения'
 };
-
 
 /****************************************************************
  *   LOGIN VALIDATION
