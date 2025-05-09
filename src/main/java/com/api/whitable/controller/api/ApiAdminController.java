@@ -18,7 +18,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-@Slf4j
 public class ApiAdminController {
     private final UserService userService;
     private final BookingService bookingService;
@@ -77,7 +76,6 @@ public class ApiAdminController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            log.info("/api/restaurants/{id} ERROR: " + e.getMessage());
             return new ResponseEntity<>("Server Error :(" , HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

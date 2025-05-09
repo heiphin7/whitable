@@ -95,7 +95,6 @@ public class RestaurantController {
     public String createNewRestaurant(@ModelAttribute CreateRestaurantDto dto,
                                               @RequestParam("file") MultipartFile file) { // фото
         try {
-            log.info("Opening hours: " + dto.getOpeningHours());
             restaurantService.create(dto, file);
         } catch (IOException e) {
             log.error("Ошибка при ссоздании Ресторана, ошибка связана с фото: " + e.getMessage() + " " + e.getMessage());

@@ -40,7 +40,6 @@ public class UserController {
     @PostMapping("/registration")
     public String processRegistration(@ModelAttribute CreateUserDto dto,
                                       RedirectAttributes redirectAttributes) {
-        log.info("Registration request: " + dto.toString());
         try {
             userService.save(dto);
             redirectAttributes.addFlashAttribute("successMessage", "Вы успешно зарегестрировались, теперь войдите в аккаунт");

@@ -35,7 +35,4 @@ public class MainController {
     public String restaurantProfile() {
         return "restaurant-profile";
     }
-
-    // TODO: При защищенных endpoint-ах указывать:
-    // @PreAuthorize("hasRole('ADMIN')")
 }
